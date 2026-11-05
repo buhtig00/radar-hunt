@@ -298,6 +298,7 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [-12.2, 5.6, 0],
     view: V.musclesFront,
     adnexa: "orbit",
+    clip: "A03",
     focus:
       "Los rectos y sus inserciones en la esclera (espiral de Tillaux): aquí se opera el estrabismo.",
   },
@@ -308,6 +309,7 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [7, -30, -2],
     view: V.apex,
     adnexa: "orbit",
+    clip: "A05",
     focus:
       "El vértice orbitario y el anillo de Zinn: por aquí entran el III, el IV y el VI par hacia sus músculos.",
   },
@@ -327,6 +329,7 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [6, -22, -0.8],
     view: V.nerveTop,
     adnexa: "orbit",
+    clip: "A05",
     focus:
       "El nervio óptico intraorbitario: la neuritis retrobulbar ocurre aquí, con el disco normal.",
   },
@@ -338,6 +341,7 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [0, 13.9, -6.5],
     view: V.lidsFront,
     adnexa: "full",
+    clip: "A01",
     focus:
       "El párpado superior: altura del borde (MRD1) y función del elevador, las dos medidas de la ptosis.",
   },
@@ -348,6 +352,7 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [16.5, 4.5, 1],
     view: V.lacrimal,
     adnexa: "full",
+    clip: "A02",
     focus:
       "Puntos, canalículos, saco y conducto nasolagrimal: localiza dónde se obstruye la lágrima.",
   },
@@ -358,6 +363,8 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [12.5, -12, -0.5],
     view: V.musclesTop,
     adnexa: "orbit",
+    clip: "A03",
+    clipLook: "los vientres de los rectos, que se engrosan en la orbitopatía tiroidea",
     focus:
       "Los vientres musculares en la órbita: en la orbitopatía tiroidea se engrosan (sobre todo el recto inferior y el medio).",
   },
@@ -368,6 +375,9 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [10, 6, -13],
     view: V.septum,
     adnexa: "full",
+    clip: "A01",
+    clipLook:
+      "párpados y reborde orbitario: delante del septo, celulitis preseptal; detrás, orbitaria",
     focus:
       "El reborde y el septo orbitario: la frontera entre la celulitis preseptal y la orbitaria.",
   },
@@ -378,6 +388,7 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     marker: [-3, -20, 4],
     view: V.intraconal,
     adnexa: "orbit",
+    clip: "A04",
     focus:
       "El espacio intraconal, detrás del globo y entre los rectos: allí crecen muchos tumores orbitarios.",
   },

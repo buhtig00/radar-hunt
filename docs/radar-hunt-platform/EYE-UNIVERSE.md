@@ -160,8 +160,29 @@ la estación muestra el tramo y una línea «Fíjate en: …».
   en lugar de S02P (reflejo fotomotor, que no es el tema de la estación).
 - **NEU-01**: sin tramo a propósito: la neuritis retrobulbar ocurre detrás del globo, con el disco
   normal, y la película no llega ahí.
-- Las 7 estaciones de anejos, órbita y vía oculomotora no tienen tramo: la película recorre el
-  globo de delante atrás. Para ellas haría falta rodar tramos nuevos.
+- Las 8 estaciones de anejos, órbita y vía oculomotora usan los **vídeos de anejos**
+  (`EYE_ADNEXA_CLIPS`, `public/eye/adnexa/A01–A05`), aparte de la película del viaje.
+
+## Vídeos de anejos y órbita
+
+La película del viaje recorre el globo de delante atrás y no llega a párpados, vía lagrimal,
+músculos ni vértice. Para esas estaciones hay 5 vídeos sueltos de 5 s:
+
+| Vídeo                        | Estaciones     | Movimiento de cámara                     |
+| ---------------------------- | -------------- | ---------------------------------------- |
+| A01 · Párpados               | OCP-01, OCP-05 | Del frente al lado externo               |
+| A02 · Vía lagrimal           | OCP-02         | Del frente al lado nasal                 |
+| A03 · Músculos extraoculares | PED-01, OCP-03 | De una vista oblicua a la vista superior |
+| A04 · Órbita                 | OCP-04         | De la vista oblicua al perfil            |
+| A05 · Vértice orbitario      | NEU-01, NEU-03 | Del nervio óptico al anillo de Zinn      |
+
+**Cómo se hicieron.** Generar estos cortes solo con texto daba anatomía inventada (un corte de
+párpado sin sentido, músculos de más, un iris mirando a cámara en vistas laterales). Por eso cada
+fotograma clave se generó a partir de una captura de **nuestro propio modelo 3D** en la vista de la
+estación, pidiendo conservar la posición de cada estructura y cambiar solo el acabado; después,
+Kling (o3, primer y último fotograma) anima el movimiento de cámara entre dos vistas. Así la
+anatomía de los vídeos es la del visor 3D, con sus mismas simplificaciones (reborde orbitario como
+un aro, vía lagrimal en azul de atlas). Pendientes de validación anatómica, como el modelo.
 
 ## Pendiente
 
