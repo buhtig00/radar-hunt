@@ -10,7 +10,7 @@ import {
   trackProgress,
   trackStations,
 } from "./eye-tracks";
-import { EYE_CHAPTERS, EYE_STRUCTURES } from "./eye-universe";
+import { EYE_CHAPTERS, EYE_STRUCTURES, getClip } from "./eye-universe";
 import { HUNT_STATIONS, HUNT_TRACKS } from "./seed-hunt-matrix";
 
 describe("Eye Universe por especialidades", () => {
@@ -32,7 +32,7 @@ describe("Eye Universe por especialidades", () => {
       expect(a, s.code).toBeTruthy();
       expect(a.station).toBe(s.code);
       expect(structures.has(a.structure), `${s.code} → ${a.structure}`).toBe(true);
-      if (a.clip) expect(chapters.has(a.clip), s.code).toBe(true);
+      if (a.clip) expect(getClip(a.clip), s.code).toBeTruthy();
       // marcador dentro de la órbita (≈ ±25 mm) y cámara fuera del punto mirado
       for (const v of a.marker) expect(Math.abs(v)).toBeLessThan(35);
       const d = Math.hypot(...a.view.pos.map((p, i) => p - a.view.target[i]));
@@ -48,11 +48,14 @@ describe("Eye Universe por especialidades", () => {
     };
     for (const a of Object.values(EYE_ANCHORS)) {
       if (!a.clip || a.station in EXCEPTIONS) continue;
-      const ch = EYE_CHAPTERS.find((c) => c.code === a.clip)!;
-      expect(ch.structures as string[], `${a.station} → ${a.clip}`).toContain(a.structure);
+      const clip = getClip(a.clip);
+      expect(clip, `${a.station} → ${a.clip}`).toBeTruthy();
+      expect(clip!.structures, `${a.station} → ${a.clip}`).toContain(a.structure);
     }
-    // La neuritis retrobulbar ocurre detrás del globo, donde la película no llega.
-    expect(EYE_ANCHORS["NEU-01"].clip).toBeUndefined();
+    // Todas las estaciones tienen vídeo: película del viaje o vídeo de anejos.
+    for (const a of Object.values(EYE_ANCHORS)) expect(a.clip, a.station).toBeTruthy();
+    // La neuritis retrobulbar (detrás del globo) usa el vídeo del vértice, no la película.
+    expect(EYE_ANCHORS["NEU-01"].clip).toBe("A05");
     expect(EYE_ANCHORS["PED-03"].clip).toBe("S02");
     // Las excepciones dicen qué mirar en el tramo.
     for (const code of Object.keys(EXCEPTIONS)) expect(EYE_ANCHORS[code].clipLook).toBeTruthy();

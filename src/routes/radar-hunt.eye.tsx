@@ -31,6 +31,7 @@ import {
   EYE_CHAPTERS,
   EYE_STATIONS,
   EYE_STRUCTURES,
+  getClip,
   getStation,
   getStructure,
 } from "@/lib/radar-hunt/eye-universe";
@@ -565,7 +566,8 @@ function StationCard({
 }) {
   const a = station.anchor;
   const structure = getStructure(a.structure);
-  const clip = getStation(a.clip);
+  const clip = getClip(a.clip);
+  const inFilm = !!getStation(a.clip);
   const [showClip, setShowClip] = useState(false);
   const [busy, setBusy] = useState(false);
   useEffect(() => setShowClip(false), [station.code]);
@@ -630,7 +632,7 @@ function StationCard({
               type="button"
               onClick={() => setShowClip(true)}
               className="group relative block aspect-video w-full overflow-hidden rounded-2xl border border-white/10 text-left"
-              aria-label={`Ver el tramo de película: ${EYE_CHAPTERS.find((c) => c.code === clip.code)?.title ?? ""}`}
+              aria-label={`Ver el vídeo: ${clip.title}`}
             >
               <img
                 src={clip.poster}
@@ -645,7 +647,7 @@ function StationCard({
               <span className="absolute bottom-2.5 left-3 right-3 text-white">
                 <span className="flex items-center gap-1.5 text-[11px] text-white/70">
                   <Clapperboard className="h-3.5 w-3.5 shrink-0" />
-                  Tramo de película · {EYE_CHAPTERS.find((c) => c.code === clip.code)?.title}
+                  {inFilm ? "Tramo de película" : "Vídeo de anejos"} · {clip.title}
                 </span>
                 {(a.clipLook || structure) && (
                   <span className="mt-0.5 block text-sm font-semibold">

@@ -518,3 +518,79 @@ export const EYE_STATIONS: EyeStation[] = [
 export function getStation(code: string | undefined): EyeStation | undefined {
   return EYE_STATIONS.find((x) => x.code === code);
 }
+
+/**
+ * Tramos de anejos y órbita: vídeos sueltos (no forman parte de la película continua del viaje
+ * anatómico, que recorre el globo de delante atrás). Ilustran las estaciones de párpados, vía
+ * lagrimal, músculos extraoculares, órbita y vértice orbitario.
+ */
+export interface EyeClip {
+  code: string;
+  title: string;
+  summary: string;
+  structures: string[];
+  video: string;
+  poster: string;
+}
+
+const adx = (code: string, title: string, summary: string, structures: string[]): EyeClip => ({
+  code,
+  title,
+  summary,
+  structures,
+  video: `${PUBLIC_BASE}eye/adnexa/${code}.mp4`,
+  poster: `${PUBLIC_BASE}eye/adnexa/${code}.jpg`,
+});
+
+export const EYE_ADNEXA_CLIPS: EyeClip[] = [
+  adx(
+    "A01",
+    "Párpados",
+    "Del frente al lado externo del ojo: los párpados alrededor del globo y el reborde orbitario.",
+    ["eyelids", "orbit"],
+  ),
+  adx(
+    "A02",
+    "Vía lagrimal",
+    "Del frente al lado nasal: canalículos, saco lagrimal y conducto nasolagrimal.",
+    ["lacrimal", "eyelids"],
+  ),
+  adx(
+    "A03",
+    "Músculos extraoculares",
+    "Por encima de la órbita: los rectos y los oblicuos convergen hacia el vértice.",
+    ["extraocular_muscles"],
+  ),
+  adx(
+    "A04",
+    "Órbita",
+    "Del frente al perfil de la órbita: el globo delante y, detrás, músculos y nervio óptico hasta el vértice.",
+    ["orbit", "extraocular_muscles", "optic_nerve"],
+  ),
+  adx(
+    "A05",
+    "Vértice orbitario",
+    "A lo largo del nervio óptico, entre los músculos, hasta el anillo tendinoso del vértice.",
+    ["optic_nerve", "extraocular_muscles", "orbit"],
+  ),
+];
+
+/** Tramo de vídeo de una estación: de la película del viaje o de los anejos. */
+export function getClip(
+  code: string | undefined,
+):
+  | { code: string; title: string; video: string; poster: string; structures: string[] }
+  | undefined {
+  const film = getStation(code);
+  if (film) {
+    const ch = EYE_CHAPTERS.find((c) => c.code === film.code)!;
+    return {
+      code: film.code,
+      title: ch.title,
+      video: film.video,
+      poster: film.poster,
+      structures: ch.structures,
+    };
+  }
+  return EYE_ADNEXA_CLIPS.find((c) => c.code === code);
+}
