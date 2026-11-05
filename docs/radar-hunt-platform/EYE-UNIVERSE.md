@@ -30,6 +30,7 @@ estación en el Hunt presencial y se juegan escaneando el QR. Publicarlas aquí 
 memorizarlas antes de competir.
 
 Otros recursos:
+
 - Vista **Lista** de cada recorrido, accesible y para equipos sin WebGL.
 - Flechas ← → para pasar de una estación a otra.
 - Enlaces directos:
@@ -42,17 +43,18 @@ Otros recursos:
 
 `src/lib/radar-hunt/eye-tracks.ts` define, para cada estación, los siguientes campos:
 
-| Campo | Qué es |
-|---|---|
-| `zone` | Segmento anterior, úvea, polo posterior, nervio óptico o anejos y órbita |
-| `structure` | Estructura del modelo que se resalta |
-| `marker` | Posición del marcador en mm (ejes de construcción: x nasal, y anterior, z inferior) |
-| `view` | Cámara en ejes de escena (x nasal, y superior, z anterior) |
-| `cutaway`, `aqueous`, `adnexa` | Modos de visualización de la estación |
-| `clip` | Tramo de la película máster que la ilustra |
-| `focus` | Una línea de qué mirar al llegar |
+| Campo                          | Qué es                                                                              |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| `zone`                         | Segmento anterior, úvea, polo posterior, nervio óptico o anejos y órbita            |
+| `structure`                    | Estructura del modelo que se resalta                                                |
+| `marker`                       | Posición del marcador en mm (ejes de construcción: x nasal, y anterior, z inferior) |
+| `view`                         | Cámara en ejes de escena (x nasal, y superior, z anterior)                          |
+| `cutaway`, `aqueous`, `adnexa` | Modos de visualización de la estación                                               |
+| `clip`                         | Tramo de la película máster que la ilustra                                          |
+| `focus`                        | Una línea de qué mirar al llegar                                                    |
 
 Los tests de `eye-tracks.test.ts` comprueban:
+
 - que los 6 recorridos cubren las 23 estaciones;
 - que cada anclaje apunta a una estructura y un tramo que existen;
 - que las estaciones fuera del globo activan los anejos.
@@ -101,17 +103,18 @@ No suma RP ni puntos de temporada: es práctica.
     superadas.
 - **Insignias** (`computeTrackBadges`, en `eye-tracks.ts`): una por recorrido y una global.
 
-  | Recorrido | Insignia |
-  |---|---|
-  | General | Ruta general |
-  | Anterior | Ruta del segmento anterior |
-  | Retina | Ruta de la retina |
-  | Glaucoma | Ruta del glaucoma |
-  | Neuro + Pediatría | Ruta neuro-pediátrica |
-  | Oculoplastia | Ruta de la órbita |
-  | Las 23 estaciones | Eye Universe completo |
+  | Recorrido         | Insignia                   |
+  | ----------------- | -------------------------- |
+  | General           | Ruta general               |
+  | Anterior          | Ruta del segmento anterior |
+  | Retina            | Ruta de la retina          |
+  | Glaucoma          | Ruta del glaucoma          |
+  | Neuro + Pediatría | Ruta neuro-pediátrica      |
+  | Oculoplastia      | Ruta de la órbita          |
+  | Las 23 estaciones | Eye Universe completo      |
 
   Cada insignia se gana cuando todas las estaciones de su recorrido están superadas.
+
 - Se calculan desde el progreso guardado (en producción, `rh_eye_progress`): no hay tabla de
   insignias que pueda desincronizarse. No dan RP ni puntos de temporada.
 - **Dónde se ven:**
@@ -119,6 +122,46 @@ No suma RP ni puntos de temporada: es práctica.
     selector;
   - un aviso único (por navegador) al conseguirla;
   - en Premios: sección «Insignias del Eye Universe», con enlace a cada recorrido.
+
+## Tramos de película por estación
+
+Cada estación enlaza el tramo de la película del viaje anatómico que recorre su estructura. El
+test `eye-tracks.test.ts › cada tramo de película recorre la estructura de su estación` lo
+comprueba; las excepciones deben estar justificadas y decir qué mirar (`clipLook`). La ficha de
+la estación muestra el tramo y una línea «Fíjate en: …».
+
+| Estación | Tema                                            | Estructura                 | Tramo                       | Qué mirar                             |
+| -------- | ----------------------------------------------- | -------------------------- | --------------------------- | ------------------------------------- |
+| GEN-01   | Uveítis e inflamación intraocular               | Iris                       | S02A · Iris y pupila        | iris                                  |
+| GEN-02   | Endoftalmitis e infección intraocular           | Vítreo                     | S03 · Vítreo                | vítreo                                |
+| ANT-01   | Queratocono y ectasias corneales                | Córnea                     | S01 · Puerta corneal        | córnea                                |
+| ANT-02   | Queratitis infecciosa                           | Córnea                     | S01 · Puerta corneal        | córnea                                |
+| RET-01   | Degeneración macular asociada a la edad         | Mácula                     | S04 · Mácula y disco        | mácula                                |
+| RET-02   | Retinopatía diabética y edema macular diabético | Retina                     | S04C · Capas de la retina   | retina                                |
+| RET-03   | Oclusiones vasculares retinianas                | Retina                     | S04 · Mácula y disco        | retina                                |
+| GLA-01   | Glaucoma primario de ángulo abierto             | Disco óptico               | S04 · Mácula y disco        | disco óptico                          |
+| GLA-02   | Cierre angular                                  | Ángulo iridocorneal        | S02Z · Zónula y acomodación | ángulo iridocorneal                   |
+| GLA-03   | Hipertensión ocular y sospecha de glaucoma      | Cuerpo ciliar              | S02Z · Zónula y acomodación | cuerpo ciliar                         |
+| GLA-04   | Glaucoma pseudoexfoliativo y pigmentario        | Cristalino                 | S02 · Cristalino            | cristalino                            |
+| GLA-05   | Glaucoma de tensión normal y progresión         | Disco óptico               | S04 · Mácula y disco        | disco óptico                          |
+| PED-01   | Estrabismo                                      | Músculos extraoculares     | —                           | Fuera del recorrido de la película    |
+| PED-02   | Ambliopía                                       | Fóvea                      | S04D · Fóvea                | fóvea                                 |
+| PED-03   | Leucocoria y patología ocular congénita         | Pupila y reflejo fotomotor | S02 · Cristalino            | el reflejo rojo a través de la pupila |
+| NEU-01   | Neuritis óptica                                 | Nervio óptico              | —                           | Fuera del recorrido de la película    |
+| NEU-02   | Papiledema e hipertensión intracraneal          | Disco óptico               | S04 · Mácula y disco        | disco óptico                          |
+| NEU-03   | Parálisis de pares craneales oculomotores       | Músculos extraoculares     | —                           | Fuera del recorrido de la película    |
+| OCP-01   | Ptosis y malposiciones palpebrales              | Párpados                   | —                           | Fuera del recorrido de la película    |
+| OCP-02   | Obstrucción de la vía lagrimal                  | Sistema lagrimal           | —                           | Fuera del recorrido de la película    |
+| OCP-03   | Orbitopatía tiroidea                            | Músculos extraoculares     | —                           | Fuera del recorrido de la película    |
+| OCP-04   | Tumores orbitarios                              | Órbita                     | —                           | Fuera del recorrido de la película    |
+| OCP-05   | Celulitis orbitaria y urgencias orbitarias      | Órbita                     | —                           | Fuera del recorrido de la película    |
+
+- **PED-03**: usa S02 (abre con el reflejo rojo y recorre el cristalino, catarata congénita)
+  en lugar de S02P (reflejo fotomotor, que no es el tema de la estación).
+- **NEU-01**: sin tramo a propósito: la neuritis retrobulbar ocurre detrás del globo, con el disco
+  normal, y la película no llega ahí.
+- Las 7 estaciones de anejos, órbita y vía oculomotora no tienen tramo: la película recorre el
+  globo de delante atrás. Para ellas haría falta rodar tramos nuevos.
 
 ## Pendiente
 

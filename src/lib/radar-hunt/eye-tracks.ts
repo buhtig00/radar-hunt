@@ -42,6 +42,8 @@ export interface EyeAnchor {
   aqueous?: boolean;
   /** Tramo de la película del viaje anatómico que ilustra la estación, si existe. */
   clip?: string;
+  /** Qué mirar en ese tramo, si no es la estructura de la estación (p. ej. el reflejo rojo). */
+  clipLook?: string;
   /** Una línea: qué mirar en el ojo al llegar a la estación. */
   focus: string;
 }
@@ -272,7 +274,10 @@ export const EYE_ANCHORS: Record<string, EyeAnchor> = {
     structure: "pupil",
     marker: [1.0, 9.8, 0.5],
     view: V.pupil,
-    clip: "S02P",
+    // S02 abre con el reflejo rojo a través de la pupila y recorre el cristalino (catarata
+    // congénita, otra causa de leucocoria). S02P es el reflejo fotomotor, que no es el tema.
+    clip: "S02",
+    clipLook: "el reflejo rojo a través de la pupila",
     focus:
       "La pupila y su reflejo rojo: una pupila blanca (leucocoria) obliga a descartar retinoblastoma.",
   },
