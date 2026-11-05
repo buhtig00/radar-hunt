@@ -642,9 +642,16 @@ function StationCard({
               <span className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[color:var(--rh-navy-950)] shadow-lg transition-transform group-hover:scale-110">
                 <Play className="ml-0.5 h-5 w-5 fill-current" />
               </span>
-              <span className="absolute bottom-2.5 left-3 right-3 flex items-center gap-1.5 text-xs font-medium text-white">
-                <Clapperboard className="h-3.5 w-3.5 shrink-0" />
-                Película · {EYE_CHAPTERS.find((c) => c.code === clip.code)?.title}
+              <span className="absolute bottom-2.5 left-3 right-3 text-white">
+                <span className="flex items-center gap-1.5 text-[11px] text-white/70">
+                  <Clapperboard className="h-3.5 w-3.5 shrink-0" />
+                  Tramo de película · {EYE_CHAPTERS.find((c) => c.code === clip.code)?.title}
+                </span>
+                {(a.clipLook || structure) && (
+                  <span className="mt-0.5 block text-sm font-semibold">
+                    Fíjate en: {a.clipLook ?? structure!.name.toLowerCase()}
+                  </span>
+                )}
               </span>
             </button>
           )}

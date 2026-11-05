@@ -41,6 +41,23 @@ describe("Eye Universe por especialidades", () => {
     }
   });
 
+  it("cada tramo de película recorre la estructura de su estación", () => {
+    // Excepciones justificadas: el tramo muestra la estructura aunque no sea su tema principal.
+    const EXCEPTIONS: Record<string, string> = {
+      "PED-03": "S02 abre con el reflejo rojo a través de la pupila",
+    };
+    for (const a of Object.values(EYE_ANCHORS)) {
+      if (!a.clip || a.station in EXCEPTIONS) continue;
+      const ch = EYE_CHAPTERS.find((c) => c.code === a.clip)!;
+      expect(ch.structures as string[], `${a.station} → ${a.clip}`).toContain(a.structure);
+    }
+    // La neuritis retrobulbar ocurre detrás del globo, donde la película no llega.
+    expect(EYE_ANCHORS["NEU-01"].clip).toBeUndefined();
+    expect(EYE_ANCHORS["PED-03"].clip).toBe("S02");
+    // Las excepciones dicen qué mirar en el tramo.
+    for (const code of Object.keys(EXCEPTIONS)) expect(EYE_ANCHORS[code].clipLook).toBeTruthy();
+  });
+
   it("las estaciones fuera del globo activan la vista de anejos", () => {
     for (const a of Object.values(EYE_ANCHORS)) {
       const outside = ["eyelids", "lacrimal", "extraocular_muscles", "orbit", "optic_nerve"];
