@@ -11,7 +11,7 @@ import { UnvalidatedNotice } from "@/components/radar-hunt/ui";
 
 const LETTERS = "ABCDEF";
 
-export function PhaseLabel({ view }: { view: LiveView }) {
+export function PhaseLabel({ view, size = "sm" }: { view: LiveView; size?: "sm" | "lg" }) {
   const label =
     view.phase === "open"
       ? "Pregunta abierta"
@@ -25,9 +25,13 @@ export function PhaseLabel({ view }: { view: LiveView }) {
               ? "Sesión terminada"
               : "En espera";
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--navy)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+    <span
+      className={`inline-flex items-center rounded-full bg-[color:var(--navy)] font-semibold uppercase tracking-wide text-white ${
+        size === "lg" ? "gap-2 px-4 py-2 text-lg" : "gap-1.5 px-2.5 py-1 text-[11px]"
+      }`}
+    >
       <Radio
-        className={`h-3 w-3 ${view.phase === "open" ? "animate-pulse text-[color:var(--gold)]" : ""}`}
+        className={`${size === "lg" ? "h-5 w-5" : "h-3 w-3"} ${view.phase === "open" ? "animate-pulse text-[color:var(--gold)]" : ""}`}
       />
       {label}
     </span>
@@ -92,9 +96,7 @@ export function LiveParticipant({ slug, joined }: { slug: string; joined: boolea
         <div className="rounded-2xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
           <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
             <span>
-              {item.kind === "poll"
-                ? "Encuesta de la sesión (anónima, no da RP)"
-                : "Reto en sala"}{" "}
+              {item.kind === "poll" ? "Encuesta de la sesión (anónima, no da RP)" : "Reto en sala"}{" "}
               · {v.itemIndex + 1}/{v.itemCount}
             </span>
             {v.phase === "open" && (
