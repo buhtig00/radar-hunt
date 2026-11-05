@@ -1,3 +1,4 @@
+import { RH_IMAGES } from "@/lib/radar-hunt/palette";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ import {
   List,
   Lock,
   MapPin,
+  Play,
   Route as RouteIcon,
   Scissors,
   Sun,
@@ -133,29 +135,40 @@ function EyeUniversePage() {
       type="button"
       onClick={() => setSearch({ modo: m === "recorridos" ? undefined : m })}
       aria-pressed={mode === m}
-      className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 ${mode === m ? "bg-[color:var(--navy)] text-white" : "text-muted-foreground hover:text-foreground"}`}
+      className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 font-medium transition-colors ${mode === m ? "bg-white text-[color:var(--rh-navy-950)]" : "text-white/60 hover:text-white"}`}
     >
       <Icon className="h-4 w-4" /> {label}
     </button>
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+    <div className="flex flex-col gap-6">
+      <header className="rh-hero-bg relative isolate flex flex-wrap items-end justify-between gap-5 overflow-hidden rounded-[28px] border border-white/10 px-6 py-6 md:px-8">
+        <img
+          src={RH_IMAGES.lens}
+          alt=""
+          aria-hidden
+          className="absolute inset-y-0 right-0 -z-10 hidden h-full w-1/2 object-cover opacity-50 [mask-image:linear-gradient(90deg,transparent,black_60%)] md:block"
+        />
         <div className="max-w-2xl">
-          <h1 className="font-serif text-2xl font-semibold">Eye Universe</h1>
-          <p className="text-sm text-muted-foreground">
-            Recorre el ojo por especialidad: cada estación de los Hunts tiene su sitio en la
-            anatomía, del párpado al vértice orbitario. Arrastra para girar y rueda para acercar.
+          <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[color:var(--rh-radar-300)]">
+            Eye Universe
+          </div>
+          <h1 className="mt-2 text-2xl leading-tight text-white sm:text-3xl md:text-4xl">
+            Recorre el ojo <em>por especialidad.</em>
+          </h1>
+          <p className="mt-2 hidden text-sm text-white/65 sm:block md:text-[15px]">
+            Cada estación de los Hunts tiene su sitio en la anatomía, del párpado al vértice
+            orbitario. Arrastra para girar y usa la rueda para acercar.
           </p>
         </div>
-        <div className="rh-scroll-x flex max-w-full overflow-x-auto rounded-lg border border-border bg-surface p-1 text-sm">
+        <div className="rh-scroll-x flex max-w-full overflow-x-auto rounded-full border border-white/10 bg-white/[0.05] p-1 text-sm backdrop-blur">
           {tab("recorridos", "Por especialidad", Compass)}
           {tab("viaje", "Viaje anatómico", RouteIcon)}
           {tab("3d", "Ojo 3D libre", Box)}
           {tab("pelicula", "Película", Clapperboard)}
         </div>
-      </div>
+      </header>
 
       {mode === "recorridos" ? (
         <TracksMode
@@ -263,15 +276,22 @@ function TracksMode({
     <div className="flex flex-col gap-4">
       {/* Selector de recorrido */}
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-          <span className="font-semibold uppercase tracking-wide">Tu recorrido</span>
-          <span>
-            {totalDone}/{totalStations} estaciones superadas
+        <div className="flex items-center justify-between gap-2 text-xs">
+          <span className="font-semibold uppercase tracking-[0.18em] text-[color:var(--rh-radar-300)]">
+            Elige recorrido
+          </span>
+          <span className="text-white/55">
+            <span className="font-semibold tabular-nums text-white">{totalDone}</span>/
+            {totalStations} estaciones superadas
           </span>
         </div>
-        <div className="rh-scroll-x -mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="tablist">
+        <div
+          className="rh-scroll-x -mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 xl:grid-cols-6"
+          role="tablist"
+        >
           {EYE_TRACKS.map((t) => {
             const on = t.code === track.code;
+            const tpi = trackProgress(t, byStation);
             return (
               <button
                 key={t.code}
@@ -279,21 +299,45 @@ function TracksMode({
                 role="tab"
                 aria-selected={on}
                 onClick={() => goTrack(t.code)}
-                className={`flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition ${on ? "border-transparent text-[color:var(--navy)]" : "border-border bg-surface text-foreground hover:bg-muted"}`}
-                style={on ? { background: t.color } : undefined}
+                className={`group relative flex w-[150px] shrink-0 flex-col gap-2 overflow-hidden rounded-2xl border p-3 text-left transition-all md:w-auto ${
+                  on
+                    ? "bg-white/[0.07]"
+                    : "border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05]"
+                }`}
+                style={
+                  on ? { borderColor: t.color, boxShadow: `0 0 28px -10px ${t.color}` } : undefined
+                }
               >
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ background: on ? "var(--navy)" : t.color }}
-                />
-                <span className="font-medium">{t.short}</span>
-                {trackProgress(t, byStation).complete ? (
-                  <Award className="h-4 w-4" aria-label="Insignia conseguida" />
-                ) : (
-                  <span className={`text-xs ${on ? "opacity-80" : "text-muted-foreground"}`}>
-                    {doneIn(t)}/{t.route.length}
+                <span className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ background: t.color }} />
+                    <span
+                      className={`text-sm font-semibold ${on ? "text-white" : "text-white/80"}`}
+                    >
+                      {t.short}
+                    </span>
                   </span>
-                )}
+                  {tpi.complete ? (
+                    <Award
+                      className="h-4 w-4"
+                      style={{ color: t.color }}
+                      aria-label="Insignia conseguida"
+                    />
+                  ) : (
+                    <span className="text-xs tabular-nums text-white/45">
+                      {tpi.passed}/{t.route.length}
+                    </span>
+                  )}
+                </span>
+                <span className="h-1 overflow-hidden rounded-full bg-white/[0.08]" aria-hidden>
+                  <span
+                    className="block h-full rounded-full"
+                    style={{
+                      width: `${(tpi.passed / t.route.length) * 100}%`,
+                      background: t.color,
+                    }}
+                  />
+                </span>
               </button>
             );
           })}
@@ -302,10 +346,10 @@ function TracksMode({
 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 max-w-3xl">
-          <h2 className="font-serif text-xl font-semibold">{track.label}</h2>
-          <p className="text-sm text-muted-foreground">{track.intro}</p>
+          <h2 className="text-2xl text-white">{track.label}</h2>
+          <p className="mt-1 text-sm text-white/60">{track.intro}</p>
           <div
-            className={`mt-2 flex max-w-md items-center gap-2.5 rounded-lg border px-3 py-1.5 text-xs ${tp.complete ? "border-transparent" : "border-border bg-surface"}`}
+            className={`mt-3 flex max-w-md items-center gap-2.5 rounded-2xl border px-3.5 py-2 text-xs ${tp.complete ? "border-transparent" : "border-white/10 bg-white/[0.03]"}`}
             style={tp.complete ? { background: `${track.color}26` } : undefined}
           >
             <Award className="h-4 w-4 shrink-0" style={{ color: track.color }} />
@@ -319,7 +363,10 @@ function TracksMode({
                   · {tp.passed}/{tp.total} superadas (≥ {EYE_PASS_PCT} % en cada estación)
                 </span>
               )}
-              <span className="mt-1 block h-1 overflow-hidden rounded-full bg-muted" aria-hidden>
+              <span
+                className="mt-1.5 block h-1 overflow-hidden rounded-full bg-white/[0.08]"
+                aria-hidden
+              >
                 <span
                   className="block h-full rounded-full"
                   style={{ width: `${(tp.passed / tp.total) * 100}%`, background: track.color }}
@@ -328,12 +375,12 @@ function TracksMode({
             </span>
           </div>
         </div>
-        <div className="flex rounded-lg border border-border bg-surface p-1 text-xs">
+        <div className="flex rounded-full border border-white/10 bg-white/[0.04] p-1 text-xs">
           <button
             type="button"
             onClick={() => setSearch({ vista: undefined })}
             aria-pressed={view === "3d"}
-            className={`flex items-center gap-1 rounded-md px-2.5 py-1 ${view === "3d" ? "bg-[color:var(--navy)] text-white" : "text-muted-foreground"}`}
+            className={`flex items-center gap-1 rounded-full px-3 py-1 font-medium ${view === "3d" ? "bg-white text-[color:var(--rh-navy-950)]" : "text-white/60 hover:text-white"}`}
           >
             <Box className="h-3.5 w-3.5" /> Ojo 3D
           </button>
@@ -341,7 +388,7 @@ function TracksMode({
             type="button"
             onClick={() => setSearch({ vista: "lista" })}
             aria-pressed={view === "lista"}
-            className={`flex items-center gap-1 rounded-md px-2.5 py-1 ${view === "lista" ? "bg-[color:var(--navy)] text-white" : "text-muted-foreground"}`}
+            className={`flex items-center gap-1 rounded-full px-3 py-1 font-medium ${view === "lista" ? "bg-white text-[color:var(--rh-navy-950)]" : "text-white/60 hover:text-white"}`}
           >
             <List className="h-3.5 w-3.5" /> Lista
           </button>
@@ -360,25 +407,31 @@ function TracksMode({
       ) : (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="flex min-w-0 flex-col gap-3">
-            <Eye3D
-              className="h-[340px] sm:h-[420px] lg:h-[520px]"
-              accommodation={0}
-              pupilFactor={1}
-              cutaway={!!a.cutaway}
-              aqueousFlow={!!a.aqueous}
-              adnexa={a.adnexa ?? "off"}
-              preset="front"
-              view={{ ...a.view, key: current.code }}
-              selected={selected}
-              onSelect={setSelected}
-              stations={markers}
-              activeStation={current.code}
-              doneStations={done}
-              onStation={go}
-            />
+            <div className="relative overflow-hidden rounded-3xl border border-white/10">
+              <span className="pointer-events-none absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full bg-black/45 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+                <span className="h-2 w-2 rounded-full" style={{ background: track.color }} />
+                {track.short} · estación {current.order} de {stations.length}
+              </span>
+              <Eye3D
+                className="h-[340px] sm:h-[420px] lg:h-[540px]"
+                accommodation={0}
+                pupilFactor={1}
+                cutaway={!!a.cutaway}
+                aqueousFlow={!!a.aqueous}
+                adnexa={a.adnexa ?? "off"}
+                preset="front"
+                view={{ ...a.view, key: current.code }}
+                selected={selected}
+                onSelect={setSelected}
+                stations={markers}
+                activeStation={current.code}
+                doneStations={done}
+                onStation={go}
+              />
+            </div>
             {/* Paso a paso del recorrido */}
             <ol
-              className="rh-scroll-x flex gap-1.5 overflow-x-auto pb-1"
+              className="rh-scroll-x flex gap-1.5 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible"
               aria-label="Estaciones del recorrido"
             >
               {stations.map((s) => {
@@ -390,11 +443,12 @@ function TracksMode({
                       type="button"
                       onClick={() => go(s.code)}
                       aria-current={on ? "step" : undefined}
-                      className={`flex max-w-[220px] items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left text-xs ${on ? "border-transparent bg-[color:var(--navy)] text-white" : "border-border bg-surface hover:bg-muted"}`}
+                      className={`flex max-w-[230px] items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-left text-xs transition-colors ${on ? "bg-white/[0.08] text-white" : "border-white/[0.08] text-white/65 hover:bg-white/[0.05] hover:text-white"}`}
+                      style={on ? { borderColor: track.color } : undefined}
                     >
                       <span
-                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-[color:var(--navy)]"
-                        style={{ background: track.color }}
+                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-[color:var(--rh-navy-950)]"
+                        style={{ background: ok || on ? track.color : `${track.color}66` }}
                       >
                         {ok ? <CheckCircle2 className="h-3.5 w-3.5" /> : s.order}
                       </span>
@@ -404,7 +458,7 @@ function TracksMode({
                 );
               })}
             </ol>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="hidden text-[11px] text-white/40 md:block">
               Atajos: ← → para cambiar de estación. Pulsa un número del ojo para saltar a esa
               estación o una estructura para ver su ficha.
             </p>
@@ -452,7 +506,7 @@ function ProgressBadge({ p }: { p?: EyeStationProgress }) {
       </span>
     );
   return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-400">
+    <span className="inline-flex items-center gap-1 text-xs font-medium text-[color:var(--warning)]">
       <Circle className="h-3.5 w-3.5" /> Practicada · mejor {p.bestCorrect}/{p.total}
       {tries} · necesitas {passMark(p.total)}/{p.total}
     </span>
@@ -516,34 +570,54 @@ function StationCard({
   const [busy, setBusy] = useState(false);
   useEffect(() => setShowClip(false), [station.code]);
   return (
-    <div className="rounded-xl border border-border bg-surface p-5 shadow-[var(--shadow-card)]">
-      <div className="flex items-center justify-between gap-2">
+    <div className="rh-card relative overflow-hidden rounded-3xl p-5">
+      <span
+        className="absolute inset-x-0 top-0 h-1"
+        style={{ background: `linear-gradient(90deg, ${track.color}, transparent)` }}
+        aria-hidden
+      />
+      <span
+        className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-20 blur-3xl"
+        style={{ background: track.color }}
+        aria-hidden
+      />
+      <div className="relative flex items-start gap-3">
         <span
-          className="text-xs font-semibold uppercase tracking-wide"
-          style={{ color: track.color }}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg font-bold text-[color:var(--rh-navy-950)]"
+          style={{ background: track.color }}
         >
-          Estación {station.order} de {total} · {track.short}
+          {station.order}
         </span>
-        <span className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">
-          {station.code}
-        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-2">
+            <span
+              className="text-[11px] font-semibold uppercase tracking-[0.16em]"
+              style={{ color: track.color }}
+            >
+              Estación {station.order} de {total} · {track.short}
+            </span>
+            <span className="shrink-0 whitespace-nowrap rounded-full bg-white/[0.06] px-2 py-0.5 text-[11px] tabular-nums text-white/55">
+              {station.code}
+            </span>
+          </div>
+          <h3 className="mt-1 text-xl leading-tight text-white">{station.title}</h3>
+        </div>
       </div>
-      <h3 className="mt-1 font-serif text-xl font-semibold leading-tight">{station.title}</h3>
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-        <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5">
+      <div className="relative mt-3 flex flex-wrap items-center gap-2 text-xs">
+        <span className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/[0.04] px-2.5 py-1 text-white/75">
           <MapPin className="h-3 w-3" /> {EYE_ZONE_LABELS[a.zone]}
           {structure ? ` · ${structure.name}` : ""}
         </span>
         <ProgressBadge p={progress} />
       </div>
-      <p className="mt-3 text-sm">{a.focus}</p>
+      <p className="relative mt-3 text-[15px] leading-relaxed text-white/85">{a.focus}</p>
 
       {clip && (
         <div className="mt-3">
           {showClip ? (
             <video
               key={clip.code}
-              className="aspect-video w-full rounded-lg bg-black"
+              className="aspect-video w-full rounded-2xl bg-black"
               src={clip.video}
               poster={clip.poster}
               controls
@@ -555,10 +629,23 @@ function StationCard({
             <button
               type="button"
               onClick={() => setShowClip(true)}
-              className="flex items-start gap-1.5 text-left text-sm font-medium text-primary"
+              className="group relative block aspect-video w-full overflow-hidden rounded-2xl border border-white/10 text-left"
+              aria-label={`Ver el tramo de película: ${EYE_CHAPTERS.find((c) => c.code === clip.code)?.title ?? ""}`}
             >
-              <Clapperboard className="mt-0.5 h-4 w-4 shrink-0" /> Ver el tramo de película (
-              {EYE_CHAPTERS.find((c) => c.code === clip.code)?.title})
+              <img
+                src={clip.poster}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+              <span className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[color:var(--rh-navy-950)] shadow-lg transition-transform group-hover:scale-110">
+                <Play className="ml-0.5 h-5 w-5 fill-current" />
+              </span>
+              <span className="absolute bottom-2.5 left-3 right-3 flex items-center gap-1.5 text-xs font-medium text-white">
+                <Clapperboard className="h-3.5 w-3.5 shrink-0" />
+                Película · {EYE_CHAPTERS.find((c) => c.code === clip.code)?.title}
+              </span>
             </button>
           )}
         </div>
@@ -576,22 +663,25 @@ function StationCard({
               setBusy(false);
             }
           }}
-          className="rh-cta flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold disabled:opacity-60"
+          className="rh-cta flex items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold disabled:opacity-60"
         >
           <Dumbbell className="h-4 w-4" /> Practicar la estación
         </button>
-        <p className="text-[11px] text-muted-foreground">
+        <p className="text-[11px] leading-relaxed text-white/45">
           Profundización (Science XP) de la estación y práctica de{" "}
           {SUBSPECIALTY_LABELS[station.subspecialty].toLowerCase()}. Con un {EYE_PASS_PCT} % de
           aciertos la estación queda superada y cuenta para la insignia del recorrido. No suma
           puntos de temporada.
         </p>
-        <div className="flex items-start gap-2 rounded-lg border border-dashed border-border p-2.5 text-xs text-muted-foreground">
+        <div className="flex items-start gap-2 rounded-2xl border border-dashed border-white/12 p-3 text-xs text-white/55">
           <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <span>
             El reto RADARS ({station.radarIds.length} preguntas) se juega en el Hunt presencial,
             escaneando el QR de la estación; no se publica aquí para que la competición sea justa.{" "}
-            <Link to="/radar-hunt/congresos" className="font-medium text-primary underline">
+            <Link
+              to="/radar-hunt/congresos"
+              className="font-medium text-[color:var(--rh-radar-300)] underline"
+            >
               Ver congresos
             </Link>
           </span>
@@ -599,20 +689,26 @@ function StationCard({
         <Link
           to="/radar-hunt/ligas/$leagueId"
           params={{ leagueId: leagueId(station.subspecialty, stage) }}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary"
+          className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/12 px-3 py-1.5 text-sm font-medium text-white/85 hover:bg-white/[0.05] hover:text-white"
         >
-          <Trophy className="h-4 w-4" /> Liga de {SUBSPECIALTY_LABELS[station.subspecialty]}
+          <Trophy className="h-4 w-4" style={{ color: track.color }} /> Liga de{" "}
+          {SUBSPECIALTY_LABELS[station.subspecialty]}
         </Link>
       </div>
 
       {structure && (
-        <details className="mt-4 rounded-lg bg-muted/50 px-3 py-2 text-sm">
-          <summary className="cursor-pointer font-medium">Anatomía: {structure.name}</summary>
-          <p className="mt-2 text-muted-foreground">{structure.summary}</p>
+        <details className="mt-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm">
+          <summary className="cursor-pointer font-medium text-white">
+            Anatomía: {structure.name}
+          </summary>
+          <p className="mt-2 text-white/60">{structure.summary}</p>
           <ul className="mt-2 space-y-1">
             {structure.facts.map((f) => (
               <li key={f} className="flex gap-2">
-                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                <span
+                  className="mt-2 h-1 w-1 shrink-0 rounded-full"
+                  style={{ background: track.color }}
+                />
                 {f}
               </li>
             ))}
@@ -625,7 +721,7 @@ function StationCard({
           type="button"
           disabled={!onPrev}
           onClick={onPrev}
-          className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm disabled:opacity-40"
+          className="flex items-center gap-1 rounded-full border border-white/12 px-4 py-2 text-sm text-white/80 hover:bg-white/[0.05] disabled:opacity-30"
         >
           <ChevronLeft className="h-4 w-4" /> Anterior
         </button>
@@ -633,12 +729,12 @@ function StationCard({
           type="button"
           disabled={!onNext}
           onClick={onNext}
-          className="flex items-center gap-1 rounded-md bg-[color:var(--navy)] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-40"
+          className="flex items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-semibold text-[color:var(--rh-navy-950)] hover:opacity-90 disabled:opacity-30"
         >
           Siguiente <ChevronRight className="h-4 w-4" />
         </button>
       </div>
-      <p className="mt-3 text-[11px] text-muted-foreground">
+      <p className="mt-4 text-[11px] text-white/35">
         Contenido de la matriz pendiente de validación por el comité médico (KOL). Modelo 3D
         educativo pendiente de validación anatómica.
       </p>
@@ -666,10 +762,11 @@ function StationList({
       {stations.map((s) => (
         <li
           key={s.code}
-          className={`flex flex-col gap-3 rounded-xl border bg-surface p-4 sm:flex-row sm:items-center ${s.code === current ? "border-primary" : "border-border"}`}
+          className="rh-card flex flex-col gap-3 rounded-2xl p-4 sm:flex-row sm:items-center"
+          style={s.code === current ? { borderColor: track.color } : undefined}
         >
           <span
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-[color:var(--navy)]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-sm font-bold text-[color:var(--rh-navy-950)]"
             style={{ background: track.color }}
             aria-hidden
           >
@@ -677,8 +774,8 @@ function StationList({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs text-muted-foreground">{s.code}</span>
-              <span className="font-medium">{s.title}</span>
+              <span className="text-xs tabular-nums text-white/45">{s.code}</span>
+              <span className="font-medium text-white">{s.title}</span>
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
               <span>
@@ -686,20 +783,20 @@ function StationList({
               </span>
               <ProgressBadge p={progress.get(s.code)} />
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">{s.anchor.focus}</p>
+            <p className="mt-1 text-sm text-white/60">{s.anchor.focus}</p>
           </div>
           <div className="flex shrink-0 gap-2">
             <button
               type="button"
               onClick={() => onOpen(s.code)}
-              className="flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-sm"
+              className="flex items-center gap-1 rounded-full border border-white/12 px-3.5 py-1.5 text-sm text-white/80 hover:bg-white/[0.05]"
             >
               <Box className="h-4 w-4" /> Ver en el ojo
             </button>
             <button
               type="button"
               onClick={() => onPractice(s.code)}
-              className="flex items-center gap-1 rounded-md bg-[color:var(--navy)] px-3 py-1.5 text-sm font-semibold text-white"
+              className="flex items-center gap-1 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-[color:var(--rh-navy-950)] hover:opacity-90"
             >
               <Dumbbell className="h-4 w-4" /> Practicar
             </button>
