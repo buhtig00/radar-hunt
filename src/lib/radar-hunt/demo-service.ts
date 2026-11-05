@@ -6,7 +6,8 @@ import { createGameCore, eyeStationPracticeId, type PlayerContext } from "./game
 import { createMemoryRepo, emptyMemoryState, type MemoryState } from "./repo-memory";
 import { buildLeagueRounds, roundState, seededRandom, shuffle } from "./rounds";
 import { DEMO_BOSS_CASES, DEMO_BOSS_QUESTIONS, DEMO_QUESTIONS } from "./seed-questions";
-import { HUNT_QUESTIONS, HUNT_STATIONS } from "./seed-hunt-matrix";
+import { HUNT_BANK } from "./hunt-bank";
+import { HUNT_STATIONS } from "./seed-hunt-matrix";
 import { computeSignals, normalizeLicense, verificationSchema } from "./verification";
 import { congressDemoState, demoStationAccess } from "./congress/demo-state";
 import type {
@@ -143,7 +144,7 @@ let repo: ReturnType<typeof createMemoryRepo> | null = null;
 function r() {
   if (!repo) {
     repo = createMemoryRepo({
-      questions: [...DEMO_QUESTIONS, ...DEMO_BOSS_QUESTIONS, ...HUNT_QUESTIONS],
+      questions: [...DEMO_QUESTIONS, ...DEMO_BOSS_QUESTIONS, ...HUNT_BANK],
       rounds: allRounds,
       bossCases: DEMO_BOSS_CASES,
       state: s().game,
@@ -176,7 +177,7 @@ export const demoGame = {
     store = null;
     repo = null;
   },
-  questions: [...DEMO_QUESTIONS, ...DEMO_BOSS_QUESTIONS, ...HUNT_QUESTIONS],
+  questions: [...DEMO_QUESTIONS, ...DEMO_BOSS_QUESTIONS, ...HUNT_BANK],
 };
 
 /** Participantes ficticios en la ronda 1 de cada liga, para ver la clasificación viva. */
@@ -358,10 +359,9 @@ export const demoService = {
 
   async startPractice(subspecialty: SubspecialtyCode): Promise<string> {
     // Práctica: banco demo + profundización (Science XP) de la matriz de los Hunts.
-    const pool = [
-      ...DEMO_QUESTIONS,
-      ...HUNT_QUESTIONS.filter((q) => q.layer === "science_xp"),
-    ].filter((q) => q.subspecialty === subspecialty);
+    const pool = [...DEMO_QUESTIONS, ...HUNT_BANK.filter((q) => q.layer === "science_xp")].filter(
+      (q) => q.subspecialty === subspecialty && q.status !== "rejected",
+    );
     if (pool.length === 0) throw new Error("No hay preguntas para esta subespecialidad.");
     const now = Date.now();
     const id = `practice:${subspecialty}:${now}`;
@@ -384,7 +384,8 @@ export const demoService = {
     // competición (RADARS) NO se exponen: se juegan en el Hunt, escaneando el QR.
     const st = HUNT_STATIONS.find((x) => x.code === stationCode);
     if (!st) throw new Error("Estación desconocida.");
-    const own = HUNT_QUESTIONS.filter((q) => st.scienceXpIds.includes(q.id));
+    // Las rechazadas por el KOL no se practican.
+    const own = HUNT_BANK.filter((q) => st.scienceXpIds.includes(q.id) && q.status !== "rejected");
     const now = Date.now();
     const id = eyeStationPracticeId(st.code, String(now));
     const fill = shuffle(
