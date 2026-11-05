@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ophthalmology Radar — Intelligence Layer (Preview)</title>
+    <style>
+      :root {
+        --bg: #f7f8fa;
+        --surface: #fff;
+        --navy: #0b1f3a;
+        --navy-2: #07111f;
+        --blue: #2563eb;
+        --gold: #c9a86a;
+        --text: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --success: #16a34a;
+        --warning: #f59e0b;
+        --danger: #dc2626;
+        --radius: 14px;
+        --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        display: grid;
+        grid-template-columns: 248px 1fr;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        background: var(--navy-2);
+        color: #cbd5e1;
+        padding: 18px 14px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 8px 16px;
+      }
+      .brand .logo {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--blue), var(--gold));
+      }
+      .brand b {
+        color: #fff;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+      }
+      .brand span {
+        display: block;
+        font-size: 11px;
+        color: #94a3b8;
+      }
+      .navgroup {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: #64748b;
+        margin: 16px 8px 6px;
+      }
+      .navitem {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 9px;
+        font-size: 13px;
+        color: #cbd5e1;
+        cursor: pointer;
+        user-select: none;
+      }
+      .navitem:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+      }
+      .navitem.active {
+        background: rgba(37, 99, 235, 0.18);
+        color: #fff;
+        box-shadow: inset 2px 0 0 var(--blue);
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #475569;
+      }
+      .navitem.active .dot {
+        background: var(--blue);
+      }
+
+      /* Topbar */
+      .main {
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 26px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+      .crumb {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .topright {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pill {
+        font-size: 11px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        background: #fff;
+      }
+      .pill.live {
+        color: var(--success);
+        border-color: rgba(22, 163, 74, 0.3);
+        background: rgba(22, 163, 74, 0.06);
+      }
+      .pill.gold {
+        color: #8a6d2f;
+        border-color: rgba(201, 168, 106, 0.4);
+        background: rgba(201, 168, 106, 0.1);
+      }
+      .role {
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        background: var(--navy);
+        color: #fff;
+      }
+
+      .content {
+        padding: 26px;
+        max-width: 1180px;
+        width: 100%;
+        margin: 0 auto;
+      }
+      .eyebrow {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--blue);
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 26px;
+        margin: 4px 0 4px;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .kpis {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      @media (max-width: 1000px) {
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+      .kpi {
+        padding: 16px;
+      }
+      .kpi .label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .kpi .value {
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 6px;
+      }
+      .kpi .hint {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .kpi .ico {
+        float: right;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(37, 99, 235, 0.1);
+      }
+
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+
+      .two {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 1000px) {
+        .two {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .sec-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        font-weight: 600;
+        margin: 0 0 8px;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .b-ai {
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--blue);
+      }
+      .b-or {
+        background: rgba(11, 31, 58, 0.08);
+        color: var(--navy);
+      }
+      .b-kol {
+        background: rgba(201, 168, 106, 0.16);
+        color: #8a6d2f;
+      }
+      .b-warn {
+        background: rgba(245, 158, 11, 0.14);
+        color: #92660b;
+      }
+      .b-danger {
+        background: rgba(220, 38, 38, 0.1);
+        color: var(--danger);
+      }
+      .b-muted {
+        background: #f1f5f9;
+        color: var(--muted);
+      }
+
+      .answer .quote {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        font-size: 15px;
+      }
+      .answer h3 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--muted);
+        margin: 18px 0 8px;
+      }
+      .answer ul {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 14px;
+      }
+      .answer li {
+        margin: 6px 0;
+      }
+      .src {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        border: 1px solid var(--border);
+        background: #fbfcfe;
+        border-radius: 9px;
+        padding: 10px;
+        font-size: 13px;
+        margin-bottom: 8px;
+      }
+      .src .ft {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        background: var(--blue);
+        opacity: 0.8;
+        margin-top: 2px;
+      }
+      .src .meta {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .banner {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .banner.danger {
+        background: rgba(220, 38, 38, 0.08);
+        border: 1px solid rgba(220, 38, 38, 0.25);
+        color: #991b1b;
+      }
+      .disclaimer {
+        margin-top: 18px;
+        background: #f8fafc;
+        border: 1px dashed var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .pico {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .pico div {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 12px;
+      }
+      .pico b {
+        display: block;
+        color: var(--blue);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 2px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .input {
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 10px 12px;
+        font-size: 13px;
+        color: var(--muted);
+        background: #fff;
+      }
+      .btn {
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        padding: 10px 14px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .btn.danger {
+        background: var(--danger);
+      }
+      .flag-item {
+        border-bottom: 1px solid var(--border);
+        padding: 12px 0;
+      }
+      .flag-item:last-child {
+        border-bottom: none;
+      }
+      .chart {
+        height: 150px;
+        border-radius: 9px;
+        background: linear-gradient(180deg, rgba(37, 99, 235, 0.12), rgba(37, 99, 235, 0));
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        padding: 12px;
+      }
+      .bar {
+        flex: 1;
+        background: var(--blue);
+        border-radius: 5px 5px 0 0;
+        opacity: 0.85;
+      }
+      .note {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      .tag {
+        font-size: 10px;
+        color: #fff;
+        background: var(--gold);
+        border-radius: 999px;
+        padding: 2px 7px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div><b>Ophthalmology Radar</b><span>Capa de Inteligencia</span></div>
+        </div>
+        <div class="navgroup">Resumen</div>
+        <div class="navitem active" data-p="dashboard">
+          <span class="dot"></span> Panel principal
+        </div>
+        <div class="navgroup">Inteligencia</div>
+        <div class="navitem" data-p="clinical"><span class="dot"></span> OR IA Clínica</div>
+        <div class="navitem" data-p="dashboard"><span class="dot"></span> Tutor Academy</div>
+        <div class="navitem" data-p="dashboard"><span class="dot"></span> Análisis de casos</div>
+        <div class="navgroup">Editorial y validación</div>
+        <div class="navitem" data-p="editorial"><span class="dot"></span> Base de conocimiento</div>
+        <div class="navitem" data-p="editorial"><span class="dot"></span> Revisión editorial</div>
+        <div class="navitem" data-p="editorial"><span class="dot"></span> Verificación KOL</div>
+        <div class="navgroup">Insights</div>
+        <div class="navitem" data-p="analytics"><span class="dot"></span> Analítica</div>
+        <div class="navitem" data-p="dashboard"><span class="dot"></span> Configuración</div>
+      </aside>
+
+      <!-- Main -->
+      <div class="main">
+        <div class="topbar">
+          <div class="crumb">Capa de Inteligencia</div>
+          <div class="topright">
+            <span class="pill live">● Datos en vivo</span>
+            <span class="pill gold">Uso educativo · MVP v0.9</span>
+            <span class="role">Oftalmólogo verificado ▾</span>
+          </div>
+        </div>
+
+        <div class="content">
+          <!-- DASHBOARD -->
+          <section class="panel active" id="dashboard">
+            <div class="eyebrow">Panel principal</div>
+            <h1>Capa de Inteligencia de Ophthalmology Radar</h1>
+            <p class="sub">
+              Asistencia educativa basada en evidencia para oftalmólogos verificados. Toda respuesta
+              es educativa/bibliográfica.
+            </p>
+            <div class="grid kpis">
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Consultas totales a la IA</div>
+                <div class="value">1.842</div>
+                <div class="hint">Histórico</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Consultas este mes</div>
+                <div class="value">342</div>
+                <div class="hint">Mes en curso</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Fuentes aprobadas</div>
+                <div class="value">128</div>
+                <div class="hint">Activas en recuperación</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Respuestas KOL verificadas</div>
+                <div class="value">7</div>
+                <div class="hint">Este trimestre</div>
+              </div>
+            </div>
+            <div class="grid two" style="margin-top: 16px">
+              <div class="card" style="padding: 18px">
+                <p class="sec-title">Accesos rápidos</p>
+                <div class="row" style="margin-bottom: 10px">
+                  <b>OR IA Clínica</b><span class="badge b-ai">IA Educativa</span>
+                </div>
+                <p class="note">
+                  Pregunta clínica con recuperación sobre fuentes aprobadas (RAG), PICO y signos de
+                  alarma.
+                </p>
+                <div class="row" style="margin: 14px 0 10px">
+                  <b>Revisión editorial</b><span class="badge b-or">OR</span>
+                </div>
+                <p class="note">Cola de contenido y respuestas marcadas por feedback negativo.</p>
+              </div>
+              <div class="card" style="padding: 18px">
+                <p class="sec-title">Actividad reciente</p>
+                <div class="flag-item">
+                  <span class="badge b-kol">KOL aprobó</span> &nbsp; DMEK en ojos
+                  post-trabeculectomía
+                  <div class="note">hace 2h</div>
+                </div>
+                <div class="flag-item">
+                  <span class="badge b-ai">Nueva fuente</span> &nbsp; AAO 2024 PPP — Glaucoma
+                  añadido a la recuperación
+                  <div class="note">Ayer</div>
+                </div>
+                <div class="flag-item">
+                  <span class="badge b-warn">Seguridad</span> &nbsp; Término de urgencia detectado —
+                  respuesta mantuvo carácter educativo
+                  <div class="note">hace 2d</div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 16px; padding: 14px 18px; background: #fbfcfe">
+              <span class="badge b-muted">Uso educativo exclusivo</span> &nbsp; No sustituye al
+              juicio clínico, diagnóstico ni tratamiento individualizado.
+            </div>
+          </section>
+
+          <!-- CLINICAL AI -->
+          <section class="panel" id="clinical">
+            <div class="eyebrow">OR IA Clínica</div>
+            <h1>Asistente clínico educativo</h1>
+            <p class="sub">
+              Respuestas estructuradas con PICO, signos de alarma y fuentes aprobadas. Cross-lingual
+              (ES/EN).
+            </p>
+            <div class="grid two">
+              <div class="card" style="padding: 18px">
+                <p class="sec-title">Consulta</p>
+                <div class="input" style="margin-bottom: 10px">
+                  Subespecialidad: <b style="color: var(--text)">Córnea</b> · Idioma: Español ·
+                  Modo: Asistente clínico
+                </div>
+                <div class="input" style="min-height: 90px; color: var(--text)">
+                  Manejo educativo del queratocono progresivo y criterios de cross-linking.
+                </div>
+                <div class="banner danger" style="margin-top: 12px">
+                  ⚠️
+                  <div>
+                    <b>Términos de urgencia detectados.</b> La respuesta se mantendrá educativa —
+                    deriva la atención urgente a evaluación presencial inmediata.
+                  </div>
+                </div>
+                <button class="btn" style="width: 100%">Preguntar a OR IA Clínica</button>
+                <p class="note">
+                  Educativo/bibliográfico. No proporciona diagnósticos, interpretación de imágenes
+                  ni tratamiento individualizado.
+                </p>
+              </div>
+
+              <div class="card answer" style="padding: 18px">
+                <div class="row">
+                  <div><span class="badge b-ai">IA Generada · Educativa</span></div>
+                  <div>
+                    <span class="badge b-warn">Evidencia limitada</span>
+                    <span class="badge b-danger">Requiere especialista</span>
+                  </div>
+                </div>
+                <div class="quote" style="margin-top: 14px">
+                  El queratocono es una ectasia corneal progresiva no inflamatoria. El cross-linking
+                  corneal está indicado de forma educativa ante progresión documentada por
+                  tomografía.
+                </div>
+
+                <h3>Consideraciones clave</h3>
+                <ul>
+                  <li>Documentar progresión con tomografía/paquimetría seriadas.</li>
+                  <li>Control de frotamiento ocular y atopia como factores modificables.</li>
+                </ul>
+
+                <h3>PICO</h3>
+                <div class="pico">
+                  <div><b>Población</b> Adultos jóvenes con ectasia</div>
+                  <div><b>Intervención</b> Cross-linking</div>
+                  <div><b>Comparador</b> Observación</div>
+                  <div><b>Outcomes</b> Estabilidad topográfica</div>
+                </div>
+
+                <h3>Signos de alarma</h3>
+                <ul>
+                  <li>Progresión rápida en adolescentes, hidrops agudo, córnea muy fina.</li>
+                </ul>
+
+                <h3>Fuentes utilizadas (verificadas en el corpus)</h3>
+                <div class="src">
+                  <div class="ft"></div>
+                  <div>
+                    <b>AAO Corneal Ectasia — Preferred Practice Pattern</b>
+                    <div class="meta">Guideline · 2024 · AAO</div>
+                  </div>
+                </div>
+                <div class="src">
+                  <div class="ft"></div>
+                  <div>
+                    <b>Global consensus on keratoconus and ectatic diseases</b>
+                    <div class="meta">Paper · PubMed</div>
+                  </div>
+                </div>
+
+                <div class="disclaimer">
+                  Esta respuesta tiene fines exclusivamente educativos y bibliográficos. No
+                  constituye diagnóstico médico ni recomendación de tratamiento individualizado. El
+                  juicio clínico es responsabilidad del profesional sanitario.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- EDITORIAL -->
+          <section class="panel" id="editorial">
+            <div class="eyebrow">Revisión editorial</div>
+            <h1>Revisión editorial</h1>
+            <p class="sub">Aprueba y cura las entradas y salidas de la Capa de Inteligencia.</p>
+
+            <div class="card" style="padding: 18px; margin-bottom: 16px">
+              <div class="row" style="margin-bottom: 10px">
+                <b>Respuestas marcadas por feedback</b
+                ><span class="badge b-danger">3 con valoración negativa</span>
+              </div>
+              <div class="flag-item">
+                <div class="row">
+                  <span class="badge b-danger">Requiere KOL</span
+                  ><span class="note">clinical_ai · Glaucoma · es</span>
+                </div>
+                <p style="margin: 6px 0 2px">
+                  Selección de MIGS en glaucoma leve-moderado tras catarata…
+                </p>
+                <p class="note">“La respuesta no menciona criterios de presión objetivo.”</p>
+                <div><span class="badge b-warn">Evidencia limitada</span></div>
+              </div>
+              <div class="flag-item">
+                <div class="row">
+                  <span class="badge b-danger">Incompleta</span
+                  ><span class="note">case_analysis · Retina · es</span>
+                </div>
+                <p style="margin: 6px 0 2px">Edema macular diabético refractario a anti-VEGF…</p>
+                <p class="note">“Faltan alternativas con corticoides intravítreos.”</p>
+              </div>
+            </div>
+
+            <div class="card" style="padding: 18px">
+              <div class="row" style="margin-bottom: 10px">
+                <b>Cola editorial real (oph_*)</b
+                ><span class="badge b-muted">198 importadas · pending_review</span>
+              </div>
+              <div class="flag-item row">
+                <div>
+                  <b>Queratocono</b>
+                  <div class="note">oph_pathologies · Córnea</div>
+                </div>
+                <span class="badge b-muted">pending_review</span>
+              </div>
+              <div class="flag-item row">
+                <div>
+                  <b>Cenegermina (Oxervate)</b>
+                  <div class="note">oph_medications · Superficie ocular</div>
+                </div>
+                <span class="badge b-muted">pending_review</span>
+              </div>
+              <div class="flag-item row">
+                <div>
+                  <b>Tomografía Scheimpflug</b>
+                  <div class="note">oph_devices · Córnea</div>
+                </div>
+                <span class="badge b-muted">pending_review</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ANALYTICS -->
+          <section class="panel" id="analytics">
+            <div class="eyebrow">Analítica</div>
+            <h1>Analítica OR</h1>
+            <p class="sub">Insights agregados y anónimos. <span class="tag">KPIs en vivo</span></p>
+            <div class="grid kpis">
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Consultas totales a la IA</div>
+                <div class="value">1.842</div>
+                <div class="hint">Histórico</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Consultas este mes</div>
+                <div class="value">342</div>
+                <div class="hint">Mes en curso</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Subespecialidad más activa</div>
+                <div class="value">Retina</div>
+                <div class="hint">128 consultas este mes</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Utilidad media</div>
+                <div class="value">92%</div>
+                <div class="hint">Según feedback</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Eventos de seguridad</div>
+                <div class="value">6</div>
+                <div class="hint">0 críticos</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Solicitudes de revisión KOL</div>
+                <div class="value">14</div>
+                <div class="hint">Feedback que pide KOL</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Fuentes aprobadas</div>
+                <div class="value">128</div>
+                <div class="hint">Activas en recuperación</div>
+              </div>
+              <div class="card kpi">
+                <div class="ico"></div>
+                <div class="label">Idioma principal</div>
+                <div class="value">ES</div>
+                <div class="hint">Ver gráfico</div>
+              </div>
+            </div>
+            <div class="grid two" style="margin-top: 16px">
+              <div class="card" style="padding: 18px">
+                <p class="sec-title">Consultas por subespecialidad</p>
+                <div class="chart">
+                  <div class="bar" style="height: 80%"></div>
+                  <div class="bar" style="height: 55%"></div>
+                  <div class="bar" style="height: 70%"></div>
+                  <div class="bar" style="height: 35%"></div>
+                  <div class="bar" style="height: 48%"></div>
+                  <div class="bar" style="height: 25%"></div>
+                </div>
+              </div>
+              <div class="card" style="padding: 18px">
+                <p class="sec-title">Tendencia mensual</p>
+                <div class="chart">
+                  <div class="bar" style="height: 30%"></div>
+                  <div class="bar" style="height: 42%"></div>
+                  <div class="bar" style="height: 55%"></div>
+                  <div class="bar" style="height: 60%"></div>
+                  <div class="bar" style="height: 78%"></div>
+                  <div class="bar" style="height: 90%"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const items = document.querySelectorAll(".navitem");
+      const panels = document.querySelectorAll(".panel");
+      items.forEach((it) =>
+        it.addEventListener("click", () => {
+          const p = it.getAttribute("data-p");
+          items.forEach((i) => i.classList.toggle("active", i === it));
+          panels.forEach((pan) => pan.classList.toggle("active", pan.id === p));
+        }),
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,308 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-navy: var(--navy);
+  --color-navy-foreground: var(--navy-foreground);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--destructive);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", "Source Serif Pro", ui-serif, Georgia, serif;
+  --shadow-elevated:
+    0 1px 2px 0 oklch(0.18 0.04 256 / 0.05), 0 12px 32px -12px oklch(0.18 0.04 256 / 0.18);
+  --shadow-card: 0 1px 0 0 oklch(0.18 0.04 256 / 0.04), 0 1px 2px 0 oklch(0.18 0.04 256 / 0.04);
+  --shadow-inset-top: inset 0 1px 0 0 oklch(1 0 0 / 0.6);
+  --gradient-navy: linear-gradient(135deg, oklch(0.2 0.045 258) 0%, oklch(0.14 0.035 256) 100%);
+  --gradient-gold: linear-gradient(135deg, oklch(0.8 0.09 82) 0%, oklch(0.68 0.1 78) 100%);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* Backgrounds */
+  --background: oklch(0.985 0.004 247);
+  --surface: oklch(1 0 0);
+  --surface-muted: oklch(0.975 0.005 250);
+
+  /* Text */
+  --foreground: oklch(0.2 0.028 264);
+  --muted: oklch(0.965 0.006 250);
+  --muted-foreground: oklch(0.52 0.022 257);
+
+  /* Brand — deeper, more medical navy */
+  --primary: oklch(0.18 0.038 256);
+  --primary-foreground: oklch(0.985 0.003 247);
+  --navy: oklch(0.22 0.05 258);
+  --navy-foreground: oklch(0.985 0.003 247);
+
+  /* Refined gold — KOL seal */
+  --gold: oklch(0.74 0.09 78);
+  --gold-foreground: oklch(0.28 0.04 75);
+
+  /* Accents */
+  --accent: oklch(0.96 0.012 250);
+  --accent-foreground: oklch(0.2 0.028 264);
+  --secondary: oklch(0.965 0.008 250);
+  --secondary-foreground: oklch(0.2 0.028 264);
+
+  /* Surfaces */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.028 264);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.028 264);
+
+  /* Status */
+  --destructive: oklch(0.56 0.2 27);
+  --destructive-foreground: oklch(0.985 0.003 247);
+  --success: oklch(0.58 0.14 158);
+  --success-foreground: oklch(0.985 0.003 247);
+  --warning: oklch(0.74 0.14 70);
+  --warning-foreground: oklch(0.22 0.03 70);
+
+  /* Inputs */
+  --border: oklch(0.915 0.008 250);
+  --input: oklch(0.915 0.008 250);
+  --ring: oklch(0.48 0.16 258); /* medical blue */
+
+  /* Charts — calm, professional */
+  --chart-1: oklch(0.48 0.16 258);
+  --chart-2: oklch(0.74 0.09 78);
+  --chart-3: oklch(0.58 0.14 158);
+  --chart-4: oklch(0.55 0.12 220);
+  --chart-5: oklch(0.62 0.12 295);
+
+  /* Sidebar — deep ink navy */
+  --sidebar: oklch(0.16 0.032 256);
+  --sidebar-foreground: oklch(0.9 0.012 250);
+  --sidebar-primary: oklch(0.74 0.09 78);
+  --sidebar-primary-foreground: oklch(0.16 0.032 256);
+  --sidebar-accent: oklch(0.22 0.04 258);
+  --sidebar-accent-foreground: oklch(0.985 0.003 247);
+  --sidebar-border: oklch(0.24 0.035 258);
+  --sidebar-ring: oklch(0.74 0.09 78);
+}
+
+.dark {
+  --background: oklch(0.14 0.032 256);
+  --surface: oklch(0.18 0.038 258);
+  --surface-muted: oklch(0.2 0.04 258);
+  --foreground: oklch(0.97 0.004 247);
+  --muted: oklch(0.22 0.04 258);
+  --muted-foreground: oklch(0.7 0.02 257);
+  --card: oklch(0.18 0.038 258);
+  --card-foreground: oklch(0.97 0.004 247);
+  --popover: oklch(0.18 0.038 258);
+  --popover-foreground: oklch(0.97 0.004 247);
+  --primary: oklch(0.97 0.004 247);
+  --primary-foreground: oklch(0.18 0.038 256);
+  --secondary: oklch(0.24 0.04 258);
+  --secondary-foreground: oklch(0.97 0.004 247);
+  --accent: oklch(0.24 0.04 258);
+  --accent-foreground: oklch(0.97 0.004 247);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.62 0.16 258);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01", "cv02";
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3,
+  .font-serif {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+    font-feature-settings: "ss01";
+  }
+}
+
+@layer utilities {
+  .bg-gradient-navy {
+    background-image: var(--gradient-navy);
+  }
+  .bg-gradient-gold {
+    background-image: var(--gradient-gold);
+  }
+  .ring-gold {
+    --tw-ring-color: var(--color-gold);
+  }
+}
+
+/* ===========================================================================
+   RADAR HUNT · sistema de diseño (aplicado a /radar-hunt y /sala)
+   Paleta navy/slate en oklch, cian de marca con cuentagotas, oro SOLO para el
+   podio, Inter para todo y Instrument Serif en cursiva para los acentos (<em>),
+   superficies de cristal. Referencia: «Apple médico», no dashboard.
+   =========================================================================== */
+.rh-theme {
+  --rh-navy-950: oklch(0.17 0.035 250);
+  --rh-navy-900: oklch(0.22 0.038 250);
+  --rh-navy-800: oklch(0.28 0.04 250);
+  --rh-radar-700: oklch(0.52 0.13 224);
+  --rh-radar-600: oklch(0.62 0.13 220);
+  --rh-radar-500: oklch(0.72 0.14 218);
+  --rh-radar-300: oklch(0.85 0.09 215);
+  --rh-radar-100: oklch(0.94 0.04 214);
+  --rh-podium: oklch(0.8 0.11 85);
+  --rh-podium-ink: oklch(0.32 0.06 80);
+  --rh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rh-glass: oklch(0.16 0.02 250 / 0.72);
+  /* Los acentos que antes eran oro pasan al cian de marca; el oro queda para el podio. */
+  --navy: var(--rh-navy-950);
+  --gold: var(--rh-radar-600);
+  --gold-foreground: var(--rh-navy-950);
+}
+.dark .rh-theme {
+  --gold: var(--rh-radar-500);
+}
+.rh-theme h1,
+.rh-theme h2,
+.rh-theme h3,
+.rh-theme .font-serif {
+  font-family: var(--font-sans);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+.rh-theme em,
+.rh-accent {
+  font-family: "Instrument Serif", ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+.rh-theme h1 em,
+.rh-theme h2 em {
+  color: var(--rh-radar-600);
+}
+.dark .rh-theme h1 em,
+.dark .rh-theme h2 em,
+.rh-theme .rh-on-ink em {
+  color: var(--rh-radar-300);
+}
+/* Cristal: fondo translúcido + desenfoque + filo interior. */
+.rh-glass {
+  background: var(--rh-glass);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow:
+    inset 1px 1px 1px 0 oklch(1 0 0 / 0.22),
+    inset 0 0 0 1px oklch(1 0 0 / 0.07),
+    0 20px 40px -24px oklch(0.1 0.03 250 / 0.6);
+}
+/* Botón principal cian con brillo interior. */
+.rh-cta {
+  background: radial-gradient(
+    120% 160% at 30% 0%,
+    var(--rh-radar-300) 0%,
+    var(--rh-radar-500) 45%,
+    var(--rh-radar-700) 100%
+  );
+  color: var(--rh-navy-950);
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.45),
+    inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+    0 8px 24px -10px var(--rh-radar-600);
+  transition:
+    transform 0.2s var(--rh-ease),
+    box-shadow 0.2s var(--rh-ease);
+}
+.rh-cta:hover {
+  transform: translateY(-1px);
+}
+/* Podio: oro reservado a los tres primeros puestos y a la Gran Final. */
+.rh-podium {
+  color: var(--rh-podium-ink);
+  background: color-mix(in oklch, var(--rh-podium) 30%, transparent);
+  border-color: color-mix(in oklch, var(--rh-podium) 70%, transparent);
+}
+.dark .rh-podium {
+  color: var(--rh-podium);
+}
+/* Fondo del héroe: navy con anillos de radar y barrido lento. */
+.rh-hero-bg {
+  background: radial-gradient(
+    120% 140% at 85% 0%,
+    oklch(0.3 0.06 235) 0%,
+    var(--rh-navy-950) 50%,
+    oklch(0.13 0.03 250) 100%
+  );
+}
+.rh-sweep {
+  background: conic-gradient(from 0deg, oklch(0.72 0.14 218 / 0.22), transparent 18%);
+  animation: rh-sweep 9s linear infinite;
+}
+@keyframes rh-sweep {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rh-sweep {
+    animation: none;
+  }
+  .rh-cta {
+    transition: none;
+  }
+}

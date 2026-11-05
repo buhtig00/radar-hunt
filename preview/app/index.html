@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ophthalmology Radar — Galería de pantallas reales (SSR)</title>
+    <style>
+      :root { --navy:#0b1f3a; --navy2:#07111f; --blue:#2563eb; --gold:#c9a86a; --muted:#6b7280; --border:#e5e7eb; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:"Inter",system-ui,sans-serif; background:#f7f8fa; color:#111827; }
+      header { background:var(--navy2); color:#fff; padding:34px 30px; }
+      header .logo { width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,var(--blue),var(--gold)); display:inline-block; vertical-align:middle; margin-right:12px; }
+      header h1 { display:inline; font-size:20px; font-weight:700; vertical-align:middle; }
+      header p { color:#94a3b8; font-size:13px; margin:14px 0 0; max-width:760px; }
+      .tag { display:inline-block; font-size:11px; background:rgba(37,99,235,.25); color:#cdddff; border:1px solid rgba(37,99,235,.4); padding:2px 9px; border-radius:999px; margin-top:12px; }
+      .wrap { max-width:1080px; margin:0 auto; padding:28px 24px 60px; }
+      .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      @media (max-width:900px){ .grid { grid-template-columns:repeat(2,1fr); } }
+      @media (max-width:600px){ .grid { grid-template-columns:1fr; } }
+      a.card { text-decoration:none; color:inherit; background:#fff; border:1px solid var(--border); border-radius:14px;
+        box-shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px rgba(16,24,40,.05); overflow:hidden; display:block; transition:transform .12s, box-shadow .12s; }
+      a.card:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(16,24,40,.12); }
+      .thumb { height:96px; background:linear-gradient(135deg,#0b1f3a,#13335f); position:relative; }
+      .thumb.alt { background:linear-gradient(135deg,#1d3a6b,#2563eb); }
+      .thumb.gold { background:linear-gradient(135deg,#5b4a26,#c9a86a); }
+      .thumb .mini { position:absolute; left:14px; bottom:-18px; background:#fff; border:1px solid var(--border); border-radius:8px; width:46px; height:46px; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+      .body { padding:24px 16px 16px; }
+      .body b { font-size:14px; }
+      .body p { font-size:12px; color:var(--muted); margin:6px 0 0; line-height:1.45; }
+      .pillrow { margin-top:10px; display:flex; flex-wrap:wrap; gap:5px; }
+      .pill { font-size:10px; padding:2px 8px; border-radius:999px; background:#eef2ff; color:var(--blue); font-weight:600; }
+      .pill.g { background:#f6efe0; color:#8a6d2f; }
+      .pill.w { background:#fff5e6; color:#92660b; }
+      .note { font-size:12px; color:var(--muted); margin-top:24px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="logo"></span><h1>Ophthalmology Radar — Intelligence Layer</h1>
+      <p>Renders <b>SSR reales</b> de la aplicación (no maquetas): el mismo HTML que sirve el servidor de producción, con el CSS de producción inlineado. Estáticos (sin interactividad). Las pantallas autenticadas se renderizaron en modo demo solo para esta exportación.</p>
+      <span class="tag">10 pantallas · build verificado · tsc 0 errores · 21/21 tests</span>
+    </header>
+    <div class="wrap">
+      <div class="grid">
+        <a class="card" href="./dashboard.html"><div class="thumb"><div class="mini"></div></div><div class="body"><b>Panel principal</b><p>KPIs, accesos rápidos, actividad y footer educativo.</p><div class="pillrow"><span class="pill">Ruta pública /</span></div></div></a>
+        <a class="card" href="./clinical-ai.html"><div class="thumb alt"><div class="mini"></div></div><div class="body"><b>OR IA Clínica</b><p>Respuesta estructurada: PICO, fuentes verificadas, signos de alarma, disclaimer.</p><div class="pillrow"><span class="pill">Validación de citas</span><span class="pill w">Guardarraíl</span></div></div></a>
+        <a class="card" href="./analytics.html"><div class="thumb alt"><div class="mini"></div></div><div class="body"><b>Analítica</b><p>8 tarjetas KPI conectadas a agregados reales + gráficos.</p><div class="pillrow"><span class="pill">KPIs en vivo</span></div></div></a>
+        <a class="card" href="./editorial-review.html"><div class="thumb gold"><div class="mini"></div></div><div class="body"><b>Revisión editorial</b><p>Cola real oph_* + panel de respuestas marcadas por feedback.</p><div class="pillrow"><span class="pill g">Feedback loop</span></div></div></a>
+        <a class="card" href="./case-analysis.html"><div class="thumb"><div class="mini"></div></div><div class="body"><b>Análisis de casos</b><p>Formulario con anonimización; gate de PII en servidor.</p><div class="pillrow"><span class="pill w">Gate PII</span></div></div></a>
+        <a class="card" href="./academy-tutor.html"><div class="thumb alt"><div class="mini"></div></div><div class="body"><b>Tutor Academy</b><p>Flashcards, MCQ y conceptos clave por curso/módulo.</p><div class="pillrow"><span class="pill">Cuota por usuario</span></div></div></a>
+        <a class="card" href="./knowledge-base.html"><div class="thumb gold"><div class="mini"></div></div><div class="body"><b>Base de conocimiento</b><p>Tabla filtrable de fuentes con acciones y estados.</p><div class="pillrow"><span class="pill g">Gobernanza</span></div></div></a>
+        <a class="card" href="./kol-verification.html"><div class="thumb gold"><div class="mini"></div></div><div class="body"><b>Verificación KOL</b><p>Validación de líderes de opinión y badge KOL Verified.</p><div class="pillrow"><span class="pill g">KOL Verified</span></div></div></a>
+        <a class="card" href="./settings.html"><div class="thumb"><div class="mini"></div></div><div class="body"><b>Configuración</b><p>Proveedor IA, seguridad, límites, roles, retención + borrado RGPD.</p><div class="pillrow"><span class="pill">Derecho de supresión</span></div></div></a>
+        <a class="card" href="./login.html"><div class="thumb"><div class="mini"></div></div><div class="body"><b>Login</b><p>Acceso de oftalmólogos verificados.</p><div class="pillrow"><span class="pill">Ruta pública /login</span></div></div></a>
+      </div>
+      <p class="note">Abre cualquier tarjeta. Cada archivo es autónomo (CSS embebido). Para volver, usa el botón Atrás del navegador.</p>
+    </div>
+  </body>
+</html>
