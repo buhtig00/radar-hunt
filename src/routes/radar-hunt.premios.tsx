@@ -1,3 +1,4 @@
+import { RH_IMAGES } from "@/lib/radar-hunt/palette";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Award, CheckCircle2, Compass, Lock, ShieldCheck, Sparkles } from "lucide-react";
@@ -36,6 +37,7 @@ function PrizesPage() {
   return (
     <div className="flex flex-col gap-6">
       <RhHero
+        image={RH_IMAGES.awards}
         eyebrow="Premios ≠ Recompensas"
         title={
           <>

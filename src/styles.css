@@ -241,6 +241,93 @@
 .rh-theme .rh-on-ink em {
   color: var(--rh-radar-300);
 }
+/* Tema oscuro inmersivo de Radar Hunt: <html class="dark rh-root"> (ver __root.tsx).
+   Sustituye los tokens del panel para que todos los componentes (tarjetas, menús,
+   diálogos) se vean en azul noche, con el cian de marca como color principal. */
+html.dark.rh-root {
+  color-scheme: dark;
+  --background: oklch(0.135 0.03 252);
+  --surface: oklch(0.18 0.032 252);
+  --surface-muted: oklch(0.205 0.034 252);
+  --card: oklch(0.18 0.032 252);
+  --card-foreground: oklch(0.97 0.005 250);
+  --popover: oklch(0.19 0.034 252);
+  --popover-foreground: oklch(0.97 0.005 250);
+  --foreground: oklch(0.97 0.005 250);
+  --muted: oklch(0.225 0.034 252);
+  --muted-foreground: oklch(0.73 0.022 250);
+  --primary: oklch(0.8 0.12 214);
+  --primary-foreground: oklch(0.17 0.035 250);
+  --secondary: oklch(0.24 0.036 252);
+  --secondary-foreground: oklch(0.97 0.005 250);
+  --accent: oklch(0.25 0.038 252);
+  --accent-foreground: oklch(0.97 0.005 250);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 13%);
+  --ring: oklch(0.72 0.14 218);
+  --success: oklch(0.72 0.15 158);
+  --warning: oklch(0.8 0.14 75);
+  --destructive: oklch(0.66 0.19 25);
+  --shadow-card: 0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 12px 32px -20px oklch(0 0 0 / 0.6);
+}
+html.dark.rh-root body {
+  background-color: var(--background);
+}
+/* Dentro de la app, «navy» es el relleno de estados activos: debe destacar sobre el fondo. */
+html.dark.rh-root .rh-app {
+  --navy: oklch(0.3 0.06 238);
+}
+/* Halo de color detrás de la cabecera. */
+.rh-app-glow {
+  background:
+    radial-gradient(60% 70% at 15% -10%, oklch(0.55 0.13 225 / 0.18), transparent 70%),
+    radial-gradient(45% 60% at 90% -20%, oklch(0.5 0.15 290 / 0.12), transparent 70%);
+}
+/* Imagen del héroe: fundida hacia la izquierda (escritorio) o hacia abajo (móvil). */
+.rh-hero-image {
+  opacity: 0.7;
+  -webkit-mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+  mask-image: linear-gradient(180deg, black 0%, transparent 85%);
+}
+@media (min-width: 768px) {
+  .rh-hero-image {
+    opacity: 0.85;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 45%);
+    mask-image: linear-gradient(90deg, transparent 0%, black 45%);
+  }
+}
+/* Filas con desplazamiento horizontal: degradado en el borde derecho para indicar que hay más
+   (solo en pantallas estrechas) y sin barra de desplazamiento visible. */
+.rh-scroll-x {
+  scrollbar-width: none;
+}
+.rh-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+@media (max-width: 767px) {
+  .rh-scroll-x {
+    -webkit-mask-image: linear-gradient(90deg, black 85%, transparent);
+    mask-image: linear-gradient(90deg, black 85%, transparent);
+  }
+}
+/* Tarjeta con filo de luz, para el sistema de tarjetas de Radar Hunt. */
+.rh-card {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.045), oklch(1 0 0 / 0.015));
+  border: 1px solid oklch(1 0 0 / 0.08);
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.06),
+    0 18px 40px -28px oklch(0 0 0 / 0.8);
+}
+.rh-card-hover {
+  transition:
+    transform 0.3s var(--rh-ease),
+    border-color 0.3s var(--rh-ease),
+    background 0.3s var(--rh-ease);
+}
+.rh-card-hover:hover {
+  transform: translateY(-2px);
+  border-color: oklch(1 0 0 / 0.16);
+}
 /* Cristal: fondo translúcido + desenfoque + filo interior. */
 .rh-glass {
   background: var(--rh-glass);
@@ -279,6 +366,12 @@
 }
 .dark .rh-podium {
   color: var(--rh-podium);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--rh-podium) 34%, transparent),
+    color-mix(in oklch, var(--rh-podium) 6%, transparent)
+  );
+  border-color: color-mix(in oklch, var(--rh-podium) 55%, transparent);
 }
 /* Fondo del héroe: navy con anillos de radar y barrido lento. */
 .rh-hero-bg {

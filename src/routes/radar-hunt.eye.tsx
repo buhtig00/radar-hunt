@@ -149,7 +149,7 @@ function EyeUniversePage() {
             anatomía, del párpado al vértice orbitario. Arrastra para girar y rueda para acercar.
           </p>
         </div>
-        <div className="flex max-w-full overflow-x-auto rounded-lg border border-border bg-surface p-1 text-sm">
+        <div className="rh-scroll-x flex max-w-full overflow-x-auto rounded-lg border border-border bg-surface p-1 text-sm">
           {tab("recorridos", "Por especialidad", Compass)}
           {tab("viaje", "Viaje anatómico", RouteIcon)}
           {tab("3d", "Ojo 3D libre", Box)}
@@ -269,7 +269,7 @@ function TracksMode({
             {totalDone}/{totalStations} estaciones superadas
           </span>
         </div>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="tablist">
+        <div className="rh-scroll-x -mx-1 flex gap-2 overflow-x-auto px-1 pb-1" role="tablist">
           {EYE_TRACKS.map((t) => {
             const on = t.code === track.code;
             return (
@@ -377,7 +377,10 @@ function TracksMode({
               onStation={go}
             />
             {/* Paso a paso del recorrido */}
-            <ol className="flex gap-1.5 overflow-x-auto pb-1" aria-label="Estaciones del recorrido">
+            <ol
+              className="rh-scroll-x flex gap-1.5 overflow-x-auto pb-1"
+              aria-label="Estaciones del recorrido"
+            >
               {stations.map((s) => {
                 const on = s.code === current.code;
                 const ok = isStationPassed(byStation.get(s.code));

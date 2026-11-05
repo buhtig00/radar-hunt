@@ -1,3 +1,4 @@
+import { RH_IMAGES } from "@/lib/radar-hunt/palette";
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -34,6 +35,7 @@ function CongressIndex() {
   return (
     <div className="flex flex-col gap-5">
       <RhHero
+        image={RH_IMAGES.congress}
         eyebrow="Pilar 3 · Congresos interactivos"
         title={
           <>

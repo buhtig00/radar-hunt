@@ -11,6 +11,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   // Pantalla de sala (proyector): a pantalla completa, sin barra lateral ni superior.
   if (path.startsWith("/sala/")) return <>{children}</>;
+  // Radar Hunt tiene su propia estructura (rh-shell.tsx), sin la barra lateral del panel.
+  if (path === "/radar-hunt" || path.startsWith("/radar-hunt/")) return <>{children}</>;
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
