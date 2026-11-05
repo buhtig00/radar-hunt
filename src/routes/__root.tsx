@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -135,8 +136,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  // Radar Hunt y la pantalla de sala van en tema oscuro inmersivo; se marca en <html> para que
+  // los portales (menús, diálogos, hojas) hereden el tema.
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const immersive = path === "/radar-hunt" || path.startsWith("/radar-hunt/");
   return (
-    <html lang="es">
+    <html lang="es" className={immersive ? "dark rh-root" : undefined}>
       <head>
         <HeadContent />
       </head>

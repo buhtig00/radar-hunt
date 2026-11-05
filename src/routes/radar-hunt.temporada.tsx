@@ -3,6 +3,7 @@ import { CalendarDays, Crown, MapPin, Radio, Trophy } from "lucide-react";
 import { useSeason } from "@/lib/radar-hunt/congress/hooks";
 import { LoadingState } from "@/components/empty-loading";
 import { RankBadge, RhHero } from "@/components/radar-hunt/ui";
+import { RH_IMAGES } from "@/lib/radar-hunt/palette";
 
 export const Route = createFileRoute("/radar-hunt/temporada")({
   head: () => ({ meta: [{ title: "Temporada · Radar Hunt" }] }),
@@ -27,6 +28,7 @@ function SeasonPage() {
   return (
     <div className="flex flex-col gap-6">
       <RhHero
+        image={RH_IMAGES.macula}
         eyebrow={plan.name}
         title={
           <>
@@ -59,58 +61,78 @@ function SeasonPage() {
           La ruta <em>de la temporada</em>
         </h2>
         <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: slots }, (_, i) => {
-            const h = hunts[i];
-            if (!h)
-              return (
-                <li
-                  key={`slot-${i}`}
-                  className="flex flex-col gap-1 rounded-2xl border border-dashed border-border p-4 text-sm text-muted-foreground"
-                >
-                  <span className="font-mono text-xs">HUNT {String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-medium text-foreground">Congreso por anunciar</span>
-                  <span>Las sociedades socias se anunciarán al confirmarse cada acuerdo.</span>
-                </li>
-              );
-            return (
-              <li key={h.id}>
-                <Link
-                  to="/radar-hunt/congresos/$slug"
-                  params={{ slug: h.slug }}
-                  className="flex h-full flex-col gap-1 rounded-2xl border border-border bg-surface p-4 text-sm transition-colors hover:border-[color:var(--gold)]"
-                >
-                  <span className="flex items-center justify-between">
-                    <span className="font-mono text-xs text-muted-foreground">
-                      HUNT {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${STATE[h.gameState].cls}`}
-                    >
-                      {h.gameState === "open" && <Radio className="mr-1 inline h-3 w-3" />}
-                      {STATE[h.gameState].label}
-                    </span>
+          {hunts.map((h, i) => (
+            <li key={h.id}>
+              <Link
+                to="/radar-hunt/congresos/$slug"
+                params={{ slug: h.slug }}
+                className="rh-card rh-card-hover flex h-full flex-col gap-1.5 rounded-2xl p-5 text-sm"
+                style={
+                  h.gameState === "open" ? { borderColor: "oklch(0.72 0.15 158 / 0.5)" } : undefined
+                }
+              >
+                <span className="flex items-center justify-between">
+                  <span className="text-xs font-semibold tracking-[0.16em] text-[color:var(--rh-radar-300)]">
+                    HUNT {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-base font-semibold">{h.name}</span>
-                  <span className="flex items-center gap-1 text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" /> {h.venue} · {h.city}
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${STATE[h.gameState].cls}`}
+                  >
+                    {h.gameState === "open" && <Radio className="h-3 w-3" />}
+                    {STATE[h.gameState].label}
                   </span>
-                  <span className="flex items-center gap-1 text-muted-foreground">
-                    <CalendarDays className="h-3.5 w-3.5" /> {fmt(h.startsAt)}
+                </span>
+                <span className="text-lg font-semibold leading-snug text-white">{h.name}</span>
+                <span className="flex items-center gap-1.5 text-white/55">
+                  <MapPin className="h-3.5 w-3.5" /> {h.venue} · {h.city}
+                </span>
+                <span className="flex items-center gap-1.5 text-white/55">
+                  <CalendarDays className="h-3.5 w-3.5" /> {fmt(h.startsAt)}
+                </span>
+                {h.isDemo && (
+                  <span className="mt-1 self-start rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] text-white/55">
+                    Ficticio (demostración)
                   </span>
-                  {h.isDemo && (
-                    <span className="mt-1 self-start rounded bg-muted px-1.5 py-0.5 text-[10px]">
-                      Ficticio (demostración)
-                    </span>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-          <li className="rh-podium flex flex-col gap-1 rounded-2xl border p-4 text-sm sm:col-span-2 lg:col-span-3">
-            <span className="flex items-center gap-2 font-semibold">
-              <Crown className="h-4 w-4" /> {plan.final.name} · {plan.final.city} {plan.final.when}
+                )}
+              </Link>
+            </li>
+          ))}
+          {slots > hunts.length && (
+            <li
+              className={`flex flex-col justify-between gap-4 rounded-2xl border border-dashed border-white/12 p-5 text-sm ${
+                hunts.length % 3 === 0
+                  ? "sm:col-span-2 lg:col-span-3"
+                  : hunts.length % 3 === 1
+                    ? "lg:col-span-2"
+                    : ""
+              }`}
+            >
+              <div>
+                <div className="font-semibold text-white">
+                  {slots - hunts.length} Hunts por anunciar
+                </div>
+                <p className="mt-1 text-white/55">
+                  Las sociedades socias se anuncian al confirmarse cada acuerdo.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: slots - hunts.length }, (_, k) => (
+                  <span
+                    key={k}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/12 text-xs font-semibold tabular-nums text-white/45"
+                  >
+                    {String(hunts.length + k + 1).padStart(2, "0")}
+                  </span>
+                ))}
+              </div>
+            </li>
+          )}
+          <li className="rh-podium relative flex flex-col gap-1 overflow-hidden rounded-2xl border p-5 text-sm sm:col-span-2 lg:col-span-3">
+            <Crown className="absolute -right-3 -top-4 h-28 w-28 opacity-10" aria-hidden />
+            <span className="flex items-center gap-2 text-base font-semibold">
+              <Crown className="h-5 w-5" /> {plan.final.name} · {plan.final.city} {plan.final.when}
             </span>
-            <span>
+            <span className="text-white/75">
               Los mejores de la temporada y de cada liga compiten en directo en un caso BOSS final.
               {!plan.final.confirmed && " Sede y fecha pendientes de confirmación."}
             </span>
@@ -135,9 +157,9 @@ function SeasonPage() {
             La clasificación aparecerá con los primeros resultados de los Hunts.
           </p>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+          <div className="rh-card overflow-x-auto rounded-2xl">
             <table className="w-full text-sm">
-              <thead className="text-left text-xs text-muted-foreground">
+              <thead className="text-left text-[11px] uppercase tracking-wider text-white/45">
                 <tr>
                   <th className="px-3 py-2">#</th>
                   <th className="px-3 py-2">Participante</th>
@@ -149,7 +171,7 @@ function SeasonPage() {
                 {rows.slice(0, 50).map((r) => (
                   <tr
                     key={r.userId}
-                    className={`border-t border-border ${r.isMe ? "bg-[color:var(--gold)]/10 font-semibold" : ""}`}
+                    className={`border-t border-white/[0.06] ${r.isMe ? "bg-[color:var(--rh-radar-500)]/12 font-semibold" : ""}`}
                   >
                     <td className="px-3 py-2">
                       <RankBadge rank={r.rank} />
@@ -169,10 +191,12 @@ function SeasonPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-3 py-2 font-mono text-xs text-muted-foreground">
+                    <td className="px-3 py-2 text-xs tabular-nums text-white/45">
                       {r.counted.map((c) => c.eventScore).join(" + ")}
                     </td>
-                    <td className="px-3 py-2 text-right font-mono">{r.score}</td>
+                    <td className="px-3 py-2 text-right font-semibold tabular-nums text-white">
+                      {r.score}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -191,10 +215,12 @@ function SeasonPage() {
 
 function Rule({ n, t, children }: { n: string; t: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-4">
-      <div className="font-mono text-lg font-semibold text-[color:var(--gold)]">{n}</div>
-      <div className="mt-1 text-sm font-semibold">{t}</div>
-      <p className="mt-1 text-xs text-muted-foreground">{children}</p>
+    <div className="rh-card rounded-2xl p-5">
+      <div className="text-2xl font-semibold tabular-nums tracking-tight text-[color:var(--rh-radar-300)]">
+        {n}
+      </div>
+      <div className="mt-1 text-sm font-semibold text-white">{t}</div>
+      <p className="mt-1 text-xs leading-relaxed text-white/55">{children}</p>
     </div>
   );
 }
