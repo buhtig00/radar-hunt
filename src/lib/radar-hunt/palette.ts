@@ -42,6 +42,10 @@ export const RH_IMAGES = {
   final: `${PUBLIC_BASE}rh/final.jpg`,
   awards: `${PUBLIC_BASE}rh/awards.jpg`,
   industry: `${PUBLIC_BASE}rh/industry.jpg`,
-  /** Ilustración (no anatómica de referencia): solo decorativa. */
+  /**
+   * Corte axial esquemático (iris de canto, cristalino, zónula, capas de la pared, disco y nervio).
+   * Simplificación de libro: el nervio sale cerca del eje y no se dibuja la fóvea. Decorativa:
+   * la referencia anatómica es el visor 3D.
+   */
   eyeUniverse: `${PUBLIC_BASE}rh/eye-universe.jpg`,
 } as const;
