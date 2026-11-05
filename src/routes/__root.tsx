@@ -139,7 +139,8 @@ function RootShell({ children }: { children: ReactNode }) {
   // Radar Hunt y la pantalla de sala van en tema oscuro inmersivo; se marca en <html> para que
   // los portales (menús, diálogos, hojas) hereden el tema.
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const immersive = path === "/radar-hunt" || path.startsWith("/radar-hunt/");
+  const immersive =
+    path === "/radar-hunt" || path.startsWith("/radar-hunt/") || path.startsWith("/sala/");
   return (
     <html lang="es" className={immersive ? "dark rh-root" : undefined}>
       <head>
