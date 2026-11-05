@@ -28,7 +28,7 @@ function SeasonPage() {
   return (
     <div className="flex flex-col gap-6">
       <RhHero
-        image={RH_IMAGES.macula}
+        image={RH_IMAGES.final}
         eyebrow={plan.name}
         title={
           <>

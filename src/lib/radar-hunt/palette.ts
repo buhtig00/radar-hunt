@@ -37,4 +37,11 @@ export const RH_IMAGES = {
   fundusFar: `${PUBLIC_BASE}eye/stations/S03.jpg`,
   oct: `${PUBLIC_BASE}eye/stations/S04C.jpg`,
   macula: `${PUBLIC_BASE}eye/stations/S04D.jpg`,
+  // Imágenes de marca generadas para la plataforma (public/rh): sin textos ni logotipos.
+  congress: `${PUBLIC_BASE}rh/congress.jpg`,
+  final: `${PUBLIC_BASE}rh/final.jpg`,
+  awards: `${PUBLIC_BASE}rh/awards.jpg`,
+  industry: `${PUBLIC_BASE}rh/industry.jpg`,
+  /** Ilustración (no anatómica de referencia): solo decorativa. */
+  eyeUniverse: `${PUBLIC_BASE}rh/eye-universe.jpg`,
 } as const;

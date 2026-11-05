@@ -1,3 +1,4 @@
+import { RH_IMAGES } from "@/lib/radar-hunt/palette";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ function IndustryPage() {
   return (
     <div className="flex flex-col gap-8">
       <RhHero
+        image={RH_IMAGES.industry}
         eyebrow="Para congresos, sociedades e industria"
         title={
           <>

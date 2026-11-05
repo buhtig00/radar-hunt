@@ -82,7 +82,7 @@ function RadarHuntHome() {
         <div className="grid auto-rows-[210px] gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <ImageTile
             to="/radar-hunt/eye"
-            image={RH_IMAGES.lens}
+            image={RH_IMAGES.eyeUniverse}
             icon={Eye}
             title="Eye Universe"
             text="Recorre un ojo humano en 3D por especialidad: cada estación de los Hunts tiene su sitio en la anatomía."
@@ -116,25 +116,25 @@ function RadarHuntHome() {
           />
           <ImageTile
             to="/radar-hunt/congresos"
-            image={RH_IMAGES.cornea}
+            image={RH_IMAGES.congress}
             icon={Radio}
             title="Congresos en directo"
             text="Estaciones con QR por la sede y retos en sala."
           />
-          <GradientTile
+          <ImageTile
             to="/radar-hunt/temporada"
+            image={RH_IMAGES.final}
             icon={Crown}
             title="Temporada y Gran Final"
             text="8 Hunts, cuentan tus 5 mejores. Los 16 primeros, a la Gran Final de Barcelona 2027."
             className="sm:col-span-2"
-            tone="gold"
           />
-          <GradientTile
+          <ImageTile
             to="/radar-hunt/premios"
+            image={RH_IMAGES.awards}
             icon={Award}
             title="Premios"
             text="Reconocimiento, insignias y experiencias. Sin premios en metálico."
-            tone="violet"
           />
           <GradientTile
             to="/radar-hunt/perfil"
